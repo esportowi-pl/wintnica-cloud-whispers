@@ -3,6 +3,7 @@ import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import SkyHeader from '@/components/layout/SkyHeader';
 import ChatBox from '@/components/chat/ChatBox';
+import Footer from '@/components/layout/Footer';
 
 const ChatPage = () => {
   return (
@@ -22,11 +23,7 @@ const ChatPage = () => {
         </div>
       </main>
       
-      <footer className="bg-gray-100 py-6 mt-8">
-        <div className="container mx-auto px-4 text-center text-gray-500">
-          &copy; 2025 Witnica.info - Wszelkie prawa zastrzeżone
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

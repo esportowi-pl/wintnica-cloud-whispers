@@ -5,6 +5,10 @@ import SkyHeader from '@/components/layout/SkyHeader';
 import NewsSection from '@/components/news/NewsSection';
 import ClassifiedList from '@/components/classifieds/ClassifiedList';
 import TweetForm from '@/components/social/TweetForm';
+import WeatherWidget from '@/components/weather/WeatherWidget';
+import EventsCalendar from '@/components/events/EventsCalendar';
+import AdsSlider from '@/components/classifieds/AdsSlider';
+import Footer from '@/components/layout/Footer';
 
 const Index = () => {
   return (
@@ -13,10 +17,25 @@ const Index = () => {
       <SkyHeader />
       
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-10">
+        {/* Top Section - News with Weather */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+          <div className="lg:col-span-2">
             <NewsSection />
-            <ClassifiedList />
+          </div>
+          <div className="lg:col-span-1">
+            <WeatherWidget />
+          </div>
+        </div>
+        
+        {/* Middle Section - Ads Slider */}
+        <div className="mb-10">
+          <AdsSlider />
+        </div>
+        
+        {/* Bottom Section - Calendar and Social */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <EventsCalendar />
           </div>
           <div className="lg:col-span-1">
             <div className="sticky top-4">
@@ -26,38 +45,7 @@ const Index = () => {
         </div>
       </main>
       
-      <footer className="bg-gray-100 py-8">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-lg font-bold mb-4">O Witnicy.info</h3>
-              <p className="text-gray-600">
-                Portal informacyjny dla mieszkańców miasta i gminy Witnica.
-                Aktualności, ogłoszenia, wydarzenia, galeria i społeczność.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Kontakt</h3>
-              <p className="text-gray-600">
-                Email: kontakt@witnica.info<br />
-                Tel: 123 456 789<br />
-                Adres: ul. Przykładowa 1, Witnica
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold mb-4">Śledź nas</h3>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-600 hover:text-primary">Facebook</a>
-                <a href="#" className="text-gray-600 hover:text-primary">Twitter</a>
-                <a href="#" className="text-gray-600 hover:text-primary">Instagram</a>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-gray-200 text-center text-gray-500">
-            &copy; 2025 Witnica.info - Wszelkie prawa zastrzeżone
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

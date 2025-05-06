@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import SkyHeader from '@/components/layout/SkyHeader';
 import ClassifiedList from '@/components/classifieds/ClassifiedList';
+import AdsSlider from '@/components/classifieds/AdsSlider';
+import Footer from '@/components/layout/Footer';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -45,14 +47,14 @@ const ClassifiedsPage = () => {
           </div>
         </div>
         
+        <div className="mb-10">
+          <AdsSlider />
+        </div>
+        
         <ClassifiedList />
       </main>
       
-      <footer className="bg-gray-100 py-6 mt-8">
-        <div className="container mx-auto px-4 text-center text-gray-500">
-          &copy; 2025 Witnica.info - Wszelkie prawa zastrzeżone
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
