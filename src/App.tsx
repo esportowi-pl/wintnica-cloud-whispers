@@ -5,6 +5,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import HomePage from "./pages/HomePage";
+import DashboardPage from "./pages/DashboardPage";
+import ContentCreationPage from "./pages/ContentCreationPage";
+import AuthPage from "./pages/AuthPage";
+import PremiumPage from "./pages/PremiumPage";
 import ChatPage from "./pages/ChatPage";
 import ClassifiedsPage from "./pages/ClassifiedsPage";
 import EventsPage from "./pages/EventsPage";
@@ -19,11 +24,22 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* Original Witnica.info pages */}
+          <Route path="/original" element={<Index />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/ogloszenia" element={<ClassifiedsPage />} />
           <Route path="/wydarzenia" element={<EventsPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* New CMS pages */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard/new-content" element={<ContentCreationPage />} />
+          <Route path="/dashboard/edit-content/:id" element={<ContentCreationPage />} />
+          <Route path="/premium" element={<PremiumPage />} />
+          
+          {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
