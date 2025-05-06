@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Edit, Trash2, Eye, BarChart2, FileText, Lock, Globe, Tag } from 'lucide-react';
@@ -120,7 +119,7 @@ const ContentList: React.FC<ContentListProps> = ({ limit }) => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'published':
-        return <Badge variant="success" className="bg-green-500">Opublikowany</Badge>;
+        return <Badge className="bg-green-500">Opublikowany</Badge>;
       case 'draft':
         return <Badge variant="outline">Szkic</Badge>;
       default:

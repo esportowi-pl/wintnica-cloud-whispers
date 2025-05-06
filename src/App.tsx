@@ -14,6 +14,9 @@ import ChatPage from "./pages/ChatPage";
 import ClassifiedsPage from "./pages/ClassifiedsPage";
 import EventsPage from "./pages/EventsPage";
 import NotFound from "./pages/NotFound";
+import AdminPanelPage from "./pages/AdminPanelPage";
+import UserPanelPage from "./pages/UserPanelPage";
+import DatingPortalPage from "./pages/DatingPortalPage";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +41,11 @@ const App = () => (
           <Route path="/dashboard/new-content" element={<ContentCreationPage />} />
           <Route path="/dashboard/edit-content/:id" element={<ContentCreationPage />} />
           <Route path="/premium" element={<PremiumPage />} />
+          
+          {/* New Admin, User and Dating Portal pages */}
+          <Route path="/admin" element={<AdminPanelPage />} />
+          <Route path="/user" element={<UserPanelPage />} />
+          <Route path="/randki" element={<DatingPortalPage />} />
           
           {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />
