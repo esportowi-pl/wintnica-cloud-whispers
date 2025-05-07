@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import HomePage from "./pages/HomePage";
+import EnhancedHomePage from "./pages/EnhancedHomePage";
 import DashboardPage from "./pages/DashboardPage";
 import ContentCreationPage from "./pages/ContentCreationPage";
 import AuthPage from "./pages/AuthPage";
@@ -15,8 +16,11 @@ import ClassifiedsPage from "./pages/ClassifiedsPage";
 import EventsPage from "./pages/EventsPage";
 import NotFound from "./pages/NotFound";
 import AdminPanelPage from "./pages/AdminPanelPage";
+import EnhancedAdminPanelPage from "./pages/EnhancedAdminPanelPage";
 import UserPanelPage from "./pages/UserPanelPage";
+import EnhancedUserProfilePage from "./pages/EnhancedUserProfilePage";
 import DatingPortalPage from "./pages/DatingPortalPage";
+import EnhancedDatingPortalPage from "./pages/EnhancedDatingPortalPage";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +38,8 @@ const App = () => (
           <Route path="/wydarzenia" element={<EventsPage />} />
           
           {/* New CMS pages */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<EnhancedHomePage />} />
+          <Route path="/home-classic" element={<HomePage />} />
           <Route path="/login" element={<AuthPage />} />
           <Route path="/register" element={<AuthPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
@@ -43,9 +48,12 @@ const App = () => (
           <Route path="/premium" element={<PremiumPage />} />
           
           {/* New Admin, User and Dating Portal pages */}
-          <Route path="/admin" element={<AdminPanelPage />} />
+          <Route path="/admin" element={<EnhancedAdminPanelPage />} />
+          <Route path="/admin-classic" element={<AdminPanelPage />} />
           <Route path="/user" element={<UserPanelPage />} />
-          <Route path="/randki" element={<DatingPortalPage />} />
+          <Route path="/profile/:username" element={<EnhancedUserProfilePage />} />
+          <Route path="/randki" element={<EnhancedDatingPortalPage />} />
+          <Route path="/dating-classic" element={<DatingPortalPage />} />
           
           {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />
