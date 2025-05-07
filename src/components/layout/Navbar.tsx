@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, User, Bell, Menu } from "lucide-react";
+import { Search, User, Bell, Menu, ShoppingCart, Users } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -101,17 +101,66 @@ const Navbar = () => {
                       </li>
                       <li>
                         <NavigationMenuLink asChild>
+                          <Link to="/grupy" className="block p-3 hover:bg-muted rounded-md">
+                            <div className="font-medium mb-1">Grupy lokalne</div>
+                            <p className="text-sm text-muted-foreground">Dołącz do grup zainteresowań.</p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
                           <Link to="/forum" className="block p-3 hover:bg-muted rounded-md">
                             <div className="font-medium mb-1">Forum</div>
                             <p className="text-sm text-muted-foreground">Dyskusje na lokalne tematy.</p>
                           </Link>
                         </NavigationMenuLink>
                       </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Rynek lokalny</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-3 p-4 w-[400px] md:w-[500px] grid-cols-2">
+                      <li className="row-span-3">
+                        <NavigationMenuLink asChild>
+                          <Link to="/rynek" className="flex flex-col h-full p-6 bg-muted rounded-md hover:bg-muted/80">
+                            <div className="text-lg font-medium mb-2">Rynek lokalny</div>
+                            <p className="text-sm text-muted-foreground">Sprzedawaj, kupuj lub wymieniaj towary lokalnie. Stragan online dla mieszkańców Witnicy.</p>
+                            <div className="mt-4 text-sm font-medium">Przejdź do rynku →</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
                       <li>
                         <NavigationMenuLink asChild>
-                          <Link to="/grupy" className="block p-3 hover:bg-muted rounded-md">
-                            <div className="font-medium mb-1">Grupy lokalne</div>
-                            <p className="text-sm text-muted-foreground">Dołącz do grup zainteresowań.</p>
+                          <Link to="/rynek?type=sprzedam" className="block p-3 hover:bg-muted rounded-md">
+                            <div className="font-medium mb-1">Sprzedam</div>
+                            <p className="text-sm text-muted-foreground">Przeglądaj oferty sprzedaży.</p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/rynek?type=oddam" className="block p-3 hover:bg-muted rounded-md">
+                            <div className="font-medium mb-1">Oddam</div>
+                            <p className="text-sm text-muted-foreground">Zobacz rzeczy do oddania za darmo.</p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/rynek?type=zamienie" className="block p-3 hover:bg-muted rounded-md">
+                            <div className="font-medium mb-1">Zamienię</div>
+                            <p className="text-sm text-muted-foreground">Oferty wymiany.</p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/rynek?type=kupie" className="block p-3 hover:bg-muted rounded-md">
+                            <div className="font-medium mb-1">Kupię</div>
+                            <p className="text-sm text-muted-foreground">Poszukiwane przedmioty.</p>
                           </Link>
                         </NavigationMenuLink>
                       </li>
@@ -137,6 +186,19 @@ const Navbar = () => {
               className="pl-10 pr-4 py-2 w-full"
             />
           </div>
+          
+          <Button variant="ghost" size="icon" className="relative">
+            <Link to="/rynek">
+              <ShoppingCart size={20} />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+            </Link>
+          </Button>
+          
+          <Button variant="ghost" size="icon" className="relative">
+            <Link to="/grupy">
+              <Users size={20} />
+            </Link>
+          </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

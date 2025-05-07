@@ -13,6 +13,8 @@ import PremiumPage from "./pages/PremiumPage";
 import ChatPage from "./pages/ChatPage";
 import ClassifiedsPage from "./pages/ClassifiedsPage";
 import EventsPage from "./pages/EventsPage";
+import LocalGroupsPage from "./pages/LocalGroupsPage";
+import MarketplacePage from "./pages/MarketplacePage";
 import NotFound from "./pages/NotFound";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import EnhancedAdminPanelPage from "./pages/EnhancedAdminPanelPage";
@@ -51,6 +53,10 @@ const App = () => (
           <Route path="/profile/:username" element={<UserPanelPage />} />
           <Route path="/randki" element={<DatingPortalPage />} />
           <Route path="/dating-classic" element={<DatingPortalPage />} />
+          
+          {/* New Local Groups and Marketplace pages */}
+          <Route path="/grupy" element={<LocalGroupsPage />} />
+          <Route path="/rynek" element={<MarketplacePage />} />
           
           {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />
