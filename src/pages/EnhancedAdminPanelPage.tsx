@@ -16,28 +16,26 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Users, Settings, FileText, Bell, Search, User, Trash2, Edit, ChevronDown, ChevronUp, Database, Globe, Shield, Key, LayoutDashboard, BarChart, Sliders, PlusCircle, AlertCircle, CheckCircle, XCircle, FormInput, CreditCard, GripVertical, Mail, CheckSquare, Loader2, Trash, Star, Eye, Heart, MessageCircle } from 'lucide-react';
+import { Users, Settings, FileText, Bell, Search, User, Trash2, Edit, ChevronDown, ChevronUp, Database, Globe, Shield, Key, LayoutDashboard, BarChart, Sliders, PlusCircle, AlertCircle, CheckCircle, XCircle, FormInput, CreditCard, GripVertical, Mail, CheckSquare, Loader2, Trash, Star } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
-import NotificationsMenu from '@/components/notifications/NotificationsMenu';
+
+// Mock users data
+const mockUsers = [
+  { id: 1, username: "jan_kowalski", email: "jan@example.com", role: "user", status: "active", joined: "2023-01-15", lastActive: "2023-06-10", verified: true, posts: 42, premium: false },
+  { id: 2, username: "anna_nowak", email: "anna@example.com", role: "editor", status: "active", joined: "2023-02-20", lastActive: "2023-06-12", verified: true, posts: 28, premium: true },
+  { id: 3, username: "marek_wisniewski", email: "marek@example.com", role: "user", status: "suspended", joined: "2023-03-10", lastActive: "2023-05-30", verified: false, posts: 13, premium: false },
+  { id: 4, username: "katarzyna_zielinska", email: "katarzyna@example.com", role: "admin", status: "active", joined: "2023-01-05", lastActive: "2023-06-12", verified: true, posts: 64, premium: true },
+  { id: 5, username: "piotr_adamski", email: "piotr@example.com", role: "user", status: "inactive", joined: "2023-04-18", lastActive: "2023-05-25", verified: true, posts: 7, premium: false },
+  { id: 6, username: "aleksandra_kowal", email: "aleksandra@example.com", role: "user", status: "active", joined: "2023-05-01", lastActive: "2023-06-11", verified: true, posts: 19, premium: false },
+  { id: 7, username: "tomasz_lis", email: "tomasz@example.com", role: "editor", status: "active", joined: "2023-03-22", lastActive: "2023-06-10", verified: true, posts: 31, premium: true },
+  { id: 8, username: "monika_kaczmarek", email: "monika@example.com", role: "user", status: "active", joined: "2023-05-10", lastActive: "2023-06-05", verified: false, posts: 4, premium: false }
+];
 
 const EnhancedAdminPanelPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showCustomFieldForm, setShowCustomFieldForm] = useState(false);
   const [draggedFieldId, setDraggedFieldId] = useState<number | null>(null);
-  const [showAiGenerator, setShowAiGenerator] = useState(false);
   
-  // Mock users data
-  const mockUsers = [
-    { id: 1, username: "jan_kowalski", email: "jan@example.com", role: "user", status: "active", joined: "2023-01-15", lastActive: "2023-06-10", verified: true, posts: 42, premium: false },
-    { id: 2, username: "anna_nowak", email: "anna@example.com", role: "editor", status: "active", joined: "2023-02-20", lastActive: "2023-06-12", verified: true, posts: 28, premium: true },
-    { id: 3, username: "marek_wisniewski", email: "marek@example.com", role: "user", status: "suspended", joined: "2023-03-10", lastActive: "2023-05-30", verified: false, posts: 13, premium: false },
-    { id: 4, username: "katarzyna_zielinska", email: "katarzyna@example.com", role: "admin", status: "active", joined: "2023-01-05", lastActive: "2023-06-12", verified: true, posts: 64, premium: true },
-    { id: 5, username: "piotr_adamski", email: "piotr@example.com", role: "user", status: "inactive", joined: "2023-04-18", lastActive: "2023-05-25", verified: true, posts: 7, premium: false },
-    { id: 6, username: "aleksandra_kowal", email: "aleksandra@example.com", role: "user", status: "active", joined: "2023-05-01", lastActive: "2023-06-11", verified: true, posts: 19, premium: false },
-    { id: 7, username: "tomasz_lis", email: "tomasz@example.com", role: "editor", status: "active", joined: "2023-03-22", lastActive: "2023-06-10", verified: true, posts: 31, premium: true },
-    { id: 8, username: "monika_kaczmarek", email: "monika@example.com", role: "user", status: "active", joined: "2023-05-10", lastActive: "2023-06-05", verified: false, posts: 4, premium: false }
-  ];
-
   // Mock content data
   const mockContent = [
     { id: 1, title: "Nowy plac zabaw", author: "Anna Nowak", status: "published", date: "2023-05-01", views: 342, likes: 28, comments: 12 },
@@ -323,271 +321,6 @@ const EnhancedAdminPanelPage = () => {
     );
   };
 
-  const NotificationForm = () => {
-    const [message, setMessage] = useState('');
-    const [type, setType] = useState('info');
-    const [loading, setLoading] = useState(false);
-  
-    const handleSubmit = () => {
-      setLoading(true);
-      setTimeout(() => {
-        alert(`Wysłano powiadomienie: ${message} (typ: ${type})`);
-        setMessage('');
-        setType('info');
-        setLoading(false);
-      }, 1000);
-    };
-  
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Wyślij powiadomienie</CardTitle>
-          <CardDescription>Wyślij powiadomienie do wszystkich użytkowników.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="notification-message">Wiadomość</Label>
-            <Textarea
-              id="notification-message"
-              placeholder="Treść powiadomienia"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="notification-type">Typ powiadomienia</Label>
-            <Select value={type} onValueChange={setType}>
-              <SelectTrigger id="notification-type">
-                <SelectValue placeholder="Wybierz typ" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="info">Informacja</SelectItem>
-                <SelectItem value="warning">Ostrzeżenie</SelectItem>
-                <SelectItem value="error">Błąd</SelectItem>
-                <SelectItem value="success">Sukces</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-        <CardFooter className="border-t">
-          <Button className="w-full" onClick={handleSubmit} disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Wysyłanie...
-              </>
-            ) : (
-              "Wyślij powiadomienie"
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
-    );
-  };
-  
-  const AnalyticsStats = () => (
-    <Card>
-      <CardHeader>
-        <CardTitle>Statystyki</CardTitle>
-        <CardDescription>Przegląd statystyk platformy.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card>
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold">Użytkownicy online</h3>
-                <p className="text-sm text-muted-foreground">Ostatnie 5 minut</p>
-              </div>
-              <span className="text-2xl font-bold">23</span>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold">Nowe komentarze</h3>
-                <p className="text-sm text-muted-foreground">Ostatnie 24 godziny</p>
-              </div>
-              <span className="text-2xl font-bold">126</span>
-            </CardContent>
-          </Card>
-        </div>
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium">Aktywność użytkowników</h4>
-          <BarChart className="h-32 w-full" />
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  const SettingsNavigation = () => {
-    const [activeSetting, setActiveSetting] = useState('general');
-  
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Ustawienia</CardTitle>
-          <CardDescription>Konfiguracja ustawień portalu.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveSetting('general')}>
-              <Globe className="mr-2 h-4 w-4" />
-              Ogólne
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveSetting('security')}>
-              <Shield className="mr-2 h-4 w-4" />
-              Bezpieczeństwo
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveSetting('api')}>
-              <Key className="mr-2 h-4 w-4" />
-              Integracje API
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveSetting('appearance')}>
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              Wygląd
-            </Button>
-            <Button variant="ghost" className="w-full justify-start" onClick={() => setActiveSetting('premium')}>
-              <CreditCard className="mr-2 h-4 w-4" />
-              Premium
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
-  
-  const GeneralSettingsForm = () => {
-    const [portalName, setPortalName] = useState('Witnica.info');
-    const [portalDescription, setPortalDescription] = useState('Portal miejski dla mieszkańców Witnicy');
-    const [contactEmail, setContactEmail] = useState('kontakt@witnica.info');
-    const [loading, setLoading] = useState(false);
-  
-    const handleSubmit = () => {
-      setLoading(true);
-      setTimeout(() => {
-        alert('Zapisano ustawienia ogólne!');
-        setLoading(false);
-      }, 1000);
-    };
-  
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Ustawienia ogólne</CardTitle>
-          <CardDescription>Konfiguracja podstawowych ustawień portalu.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="portal-name">Nazwa portalu</Label>
-            <Input
-              id="portal-name"
-              placeholder="Nazwa portalu"
-              value={portalName}
-              onChange={(e) => setPortalName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="portal-description">Opis portalu</Label>
-            <Textarea
-              id="portal-description"
-              placeholder="Opis portalu"
-              value={portalDescription}
-              onChange={(e) => setPortalDescription(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="contact-email">Email kontaktowy</Label>
-            <Input
-              id="contact-email"
-              placeholder="Email kontaktowy"
-              type="email"
-              value={contactEmail}
-              onChange={(e) => setContactEmail(e.target.value)}
-            />
-          </div>
-        </CardContent>
-        <CardFooter className="border-t">
-          <Button className="w-full" onClick={handleSubmit} disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Zapisywanie...
-              </>
-            ) : (
-              "Zapisz ustawienia"
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
-    );
-  };
-  
-  const SecuritySettingsForm = () => {
-    const [passwordStrength, setPasswordStrength] = useState('medium');
-    const [loginAttempts, setLoginAttempts] = useState(5);
-    const [twoFactorAuth, setTwoFactorAuth] = useState(false);
-    const [loading, setLoading] = useState(false);
-  
-    const handleSubmit = () => {
-      setLoading(true);
-      setTimeout(() => {
-        alert('Zapisano ustawienia bezpieczeństwa!');
-        setLoading(false);
-      }, 1000);
-    };
-  
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Ustawienia bezpieczeństwa</CardTitle>
-          <CardDescription>Konfiguracja ustawień bezpieczeństwa portalu.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="password-strength">Wymagana siła hasła</Label>
-            <Select value={passwordStrength} onValueChange={setPasswordStrength}>
-              <SelectTrigger id="password-strength">
-                <SelectValue placeholder="Wybierz siłę hasła" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low">Niska</SelectItem>
-                <SelectItem value="medium">Średnia</SelectItem>
-                <SelectItem value="high">Wysoka</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="login-attempts">Limit prób logowania</Label>
-            <Input
-              id="login-attempts"
-              placeholder="Limit prób logowania"
-              type="number"
-              value={loginAttempts}
-              onChange={(e) => setLoginAttempts(Number(e.target.value))}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="two-factor-auth" className="cursor-pointer">Uwierzytelnianie dwuskładnikowe</Label>
-            <Switch id="two-factor-auth" checked={twoFactorAuth} onCheckedChange={setTwoFactorAuth} />
-          </div>
-        </CardContent>
-        <CardFooter className="border-t">
-          <Button className="w-full" onClick={handleSubmit} disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Zapisywanie...
-              </>
-            ) : (
-              "Zapisz ustawienia"
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
-    );
-  };
-
   return (
     <MainLayout>
       <div className="container mx-auto py-8 px-4">
@@ -598,13 +331,10 @@ const EnhancedAdminPanelPage = () => {
           </div>
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Panel Administracyjny</h1>
-            <div className="flex items-center gap-2">
-              <NotificationsMenu />
-              <Button>
-                <Shield className="mr-2 h-4 w-4" />
-                Dziennik zdarzeń
-              </Button>
-            </div>
+            <Button>
+              <Shield className="mr-2 h-4 w-4" />
+              Dziennik zdarzeń
+            </Button>
           </div>
         </div>
         
@@ -636,13 +366,13 @@ const EnhancedAdminPanelPage = () => {
           />
         </div>
         
-        {/* Global Search and Quick Actions */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div className="relative">
+        {/* Global Search */}
+        <div className="mb-8">
+          <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
             <Input 
               placeholder="Szukaj użytkowników, treści, ustawień..." 
-              className="pl-10 w-[300px] md:w-[400px]" 
+              className="pl-10 pr-16" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1153,7 +883,7 @@ const EnhancedAdminPanelPage = () => {
                                 notification.type === 'error' ? 'bg-red-100' :
                                 'bg-green-100'
                               }`}>
-                                {notification.type === 'info' && <AlertCircle className={`h-4 w-4 text-blue-600`} />}
+                                {notification.type === 'info' && <Info className={`h-4 w-4 text-blue-600`} />}
                                 {notification.type === 'warning' && <AlertCircle className={`h-4 w-4 text-yellow-600`} />}
                                 {notification.type === 'error' && <XCircle className={`h-4 w-4 text-red-600`} />}
                                 {notification.type === 'success' && <CheckCircle className={`h-4 w-4 text-green-600`} />}
@@ -1185,7 +915,71 @@ const EnhancedAdminPanelPage = () => {
               </div>
               
               <div className="md:col-span-1 space-y-6">
-                <NotificationForm />
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Wysyłanie powiadomień</CardTitle>
+                    <CardDescription>
+                      Wyślij powiadomienie do wszystkich lub wybranych użytkowników.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="notification-title">Tytuł powiadomienia</Label>
+                        <Input id="notification-title" placeholder="np. Ważna aktualizacja systemu" />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="notification-message">Treść powiadomienia</Label>
+                        <Textarea 
+                          id="notification-message" 
+                          placeholder="Wprowadź treść powiadomienia" 
+                          className="min-h-[100px]"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="notification-type">Typ powiadomienia</Label>
+                        <Select defaultValue="info">
+                          <SelectTrigger id="notification-type">
+                            <SelectValue placeholder="Wybierz typ" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="info">Informacja</SelectItem>
+                            <SelectItem value="warning">Ostrzeżenie</SelectItem>
+                            <SelectItem value="error">Błąd</SelectItem>
+                            <SelectItem value="success">Sukces</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="notification-recipients">Odbiorcy</Label>
+                        <Select defaultValue="all">
+                          <SelectTrigger id="notification-recipients">
+                            <SelectValue placeholder="Wybierz odbiorców" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Wszyscy użytkownicy</SelectItem>
+                            <SelectItem value="admins">Tylko administratorzy</SelectItem>
+                            <SelectItem value="editors">Tylko redaktorzy</SelectItem>
+                            <SelectItem value="premium">Użytkownicy Premium</SelectItem>
+                            <SelectItem value="custom">Wybrani użytkownicy</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Checkbox id="notification-email" />
+                        <Label htmlFor="notification-email">Wyślij również e-mailem</Label>
+                      </div>
+                      
+                      <Button className="w-full">
+                        Wyślij powiadomienie
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
                 
                 <Card>
                   <CardHeader>
@@ -1230,12 +1024,197 @@ const EnhancedAdminPanelPage = () => {
           <TabsContent value="settings">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-1">
-                <SettingsNavigation />
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardTitle>Ustawienia portalu</CardTitle>
+                    <CardDescription>
+                      Zarządzaj globalnymi ustawieniami platformy.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <nav className="flex flex-col">
+                      <a href="#general" className="flex items-center px-4 py-3 border-l-2 border-primary bg-primary/5 text-primary">
+                        <Globe className="h-5 w-5 mr-3" />
+                        <span>Ogólne</span>
+                      </a>
+                      <a href="#security" className="flex items-center px-4 py-3 border-l-2 border-transparent hover:bg-muted/50 transition-colors">
+                        <Shield className="h-5 w-5 mr-3" />
+                        <span>Bezpieczeństwo</span>
+                      </a>
+                      <a href="#api" className="flex items-center px-4 py-3 border-l-2 border-transparent hover:bg-muted/50 transition-colors">
+                        <Key className="h-5 w-5 mr-3" />
+                        <span>API i integracje</span>
+                      </a>
+                      <a href="#analytics" className="flex items-center px-4 py-3 border-l-2 border-transparent hover:bg-muted/50 transition-colors">
+                        <BarChart className="h-5 w-5 mr-3" />
+                        <span>Analityka</span>
+                      </a>
+                      <a href="#database" className="flex items-center px-4 py-3 border-l-2 border-transparent hover:bg-muted/50 transition-colors">
+                        <Database className="h-5 w-5 mr-3" />
+                        <span>Baza danych</span>
+                      </a>
+                      <a href="#premium" className="flex items-center px-4 py-3 border-l-2 border-transparent hover:bg-muted/50 transition-colors">
+                        <CreditCard className="h-5 w-5 mr-3" />
+                        <span>Premium i płatności</span>
+                      </a>
+                    </nav>
+                  </CardContent>
+                </Card>
               </div>
               
               <div className="md:col-span-2 space-y-6">
-                <GeneralSettingsForm />
-                <SecuritySettingsForm />
+                <Card id="general">
+                  <CardHeader>
+                    <CardTitle>Ustawienia ogólne</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="site-name">Nazwa portalu</Label>
+                        <Input id="site-name" defaultValue="Witnica.info" />
+                      </div>
+                      <div className="col-span-2">
+                        <Label htmlFor="site-description">Opis portalu</Label>
+                        <Input id="site-description" defaultValue="Portal miejski dla mieszkańców Witnicy" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="site-email">Email kontaktowy</Label>
+                        <Input id="site-email" defaultValue="kontakt@witnica.info" />
+                      </div>
+                      <div>
+                        <Label htmlFor="site-language">Język domyślny</Label>
+                        <Select defaultValue="pl">
+                          <SelectTrigger id="site-language">
+                            <SelectValue placeholder="Wybierz język" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="pl">Polski</SelectItem>
+                            <SelectItem value="en">Angielski</SelectItem>
+                            <SelectItem value="de">Niemiecki</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="logo-upload">Logo portalu</Label>
+                      <div className="flex items-center gap-4 mt-1.5">
+                        <div className="w-12 h-12 bg-muted flex items-center justify-center rounded-md">
+                          <Globe className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                        <Button variant="outline">Przeglądaj...</Button>
+                      </div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-medium">Zezwalaj na rejestrację użytkowników</h3>
+                      <div className="flex items-center space-x-2">
+                        <Switch id="allow-registration" defaultChecked />
+                        <Label htmlFor="allow-registration">Rejestracja otwarta</Label>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-medium">Funkcje społecznościowe</h3>
+                      <div className="grid grid-cols-2 gap-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Switch id="allow-comments" defaultChecked />
+                          <Label htmlFor="allow-comments">Komentarze</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch id="allow-likes" defaultChecked />
+                          <Label htmlFor="allow-likes">Polubienia</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch id="allow-sharing" defaultChecked />
+                          <Label htmlFor="allow-sharing">Udostępnianie</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch id="allow-user-content" defaultChecked />
+                          <Label htmlFor="allow-user-content">Treści użytkowników</Label>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="border-t flex justify-end">
+                    <Button>Zapisz ustawienia</Button>
+                  </CardFooter>
+                </Card>
+                
+                <Card id="security">
+                  <CardHeader>
+                    <CardTitle>Bezpieczeństwo</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="password-strength">Wymagana siła hasła</Label>
+                      <Select defaultValue="medium">
+                        <SelectTrigger id="password-strength">
+                          <SelectValue placeholder="Wybierz wymaganą siłę" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Niska</SelectItem>
+                          <SelectItem value="medium">Średnia</SelectItem>
+                          <SelectItem value="high">Wysoka</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="login-attempts">Limit prób logowania</Label>
+                        <Input id="login-attempts" type="number" defaultValue="5" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="lockout-time">Czas blokady (minuty)</Label>
+                        <Input id="lockout-time" type="number" defaultValue="30" />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-medium">Weryfikacja dwustopniowa (2FA)</h3>
+                      <div className="flex items-center space-x-2">
+                        <Switch id="enable-2fa" defaultChecked />
+                        <Label htmlFor="enable-2fa">Włącz 2FA dla kont administracyjnych</Label>
+                      </div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-medium">Filtrowanie treści</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <div>Automatyczna moderacja komentarzy</div>
+                            <div className="text-sm text-muted-foreground">
+                              Filtruj wulgarne słowa i potencjalny spam
+                            </div>
+                          </div>
+                          <Switch id="auto-moderation" defaultChecked />
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <div>Weryfikacja treści użytkowników</div>
+                            <div className="text-sm text-muted-foreground">
+                              Wymagaj zatwierdzenia nowych postów przez moderatora
+                            </div>
+                          </div>
+                          <Switch id="content-verification" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="border-t flex justify-end">
+                    <Button>Zapisz ustawienia</Button>
+                  </CardFooter>
+                </Card>
               </div>
             </div>
           </TabsContent>
@@ -1244,5 +1223,69 @@ const EnhancedAdminPanelPage = () => {
     </MainLayout>
   );
 };
+
+// Define missing icons
+const Heart = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+  </svg>
+);
+
+const MessageCircle = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
+  </svg>
+);
+
+const Eye = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const Info = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 16v-4" />
+    <path d="M12 8h.01" />
+  </svg>
+);
 
 export default EnhancedAdminPanelPage;

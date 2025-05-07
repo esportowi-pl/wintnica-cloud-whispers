@@ -17,9 +17,7 @@ import NotFound from "./pages/NotFound";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import EnhancedAdminPanelPage from "./pages/EnhancedAdminPanelPage";
 import UserPanelPage from "./pages/UserPanelPage";
-import EnhancedUserProfilePage from "./pages/EnhancedUserProfilePage";
 import DatingPortalPage from "./pages/DatingPortalPage";
-import EnhancedDatingPortalPage from "./pages/EnhancedDatingPortalPage";
 
 const queryClient = new QueryClient();
 
@@ -50,8 +48,8 @@ const App = () => (
           <Route path="/admin" element={<EnhancedAdminPanelPage />} />
           <Route path="/admin-classic" element={<AdminPanelPage />} />
           <Route path="/user" element={<UserPanelPage />} />
-          <Route path="/profile/:username" element={<EnhancedUserProfilePage />} />
-          <Route path="/randki" element={<EnhancedDatingPortalPage />} />
+          <Route path="/profile/:username" element={<UserPanelPage />} />
+          <Route path="/randki" element={<DatingPortalPage />} />
           <Route path="/dating-classic" element={<DatingPortalPage />} />
           
           {/* Catch-all route for 404 */}
