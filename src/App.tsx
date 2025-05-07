@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import HomePage from "./pages/HomePage";
-import EnhancedHomePage from "./pages/EnhancedHomePage";
 import DashboardPage from "./pages/DashboardPage";
 import ContentCreationPage from "./pages/ContentCreationPage";
 import AuthPage from "./pages/AuthPage";
@@ -38,7 +37,7 @@ const App = () => (
           <Route path="/wydarzenia" element={<EventsPage />} />
           
           {/* New CMS pages */}
-          <Route path="/" element={<EnhancedHomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/home-classic" element={<HomePage />} />
           <Route path="/login" element={<AuthPage />} />
           <Route path="/register" element={<AuthPage />} />
