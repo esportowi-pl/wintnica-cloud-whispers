@@ -4,23 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { toast } from 'sonner';
-import { Save } from 'lucide-react';
-import { Form, FormField } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
+import { Form } from '@/components/ui/form';
 import EditorMainContent from './EditorMainContent';
 import EditorSidebar from './EditorSidebar';
-
-const formSchema = z.object({
-  title: z.string().min(5, { message: "Tytuł musi mieć co najmniej 5 znaków" }),
-  content: z.string().min(20, { message: "Treść musi mieć co najmniej 20 znaków" }),
-  excerpt: z.string().optional(),
-  category: z.string(),
-  tags: z.string(),
-  visibility: z.enum(["public", "premium", "private"]),
-  featuredImage: z.string().optional(),
-});
+import { formSchema } from './schemas/contentSchema';
 
 export type ContentValues = z.infer<typeof formSchema>;
 
