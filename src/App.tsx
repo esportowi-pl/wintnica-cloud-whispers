@@ -1,69 +1,58 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import HomePage from "./pages/HomePage";
-import DashboardPage from "./pages/DashboardPage";
-import ContentCreationPage from "./pages/ContentCreationPage";
-import AuthPage from "./pages/AuthPage";
-import PremiumPage from "./pages/PremiumPage";
-import ChatPage from "./pages/ChatPage";
-import ClassifiedsPage from "./pages/ClassifiedsPage";
-import EventsPage from "./pages/EventsPage";
-import LocalGroupsPage from "./pages/LocalGroupsPage";
-import MarketplacePage from "./pages/MarketplacePage";
-import NotFound from "./pages/NotFound";
-import AdminPanelPage from "./pages/AdminPanelPage";
-import EnhancedAdminPanelPage from "./pages/EnhancedAdminPanelPage";
-import UserPanelPage from "./pages/UserPanelPage";
-import DatingPortalPage from "./pages/DatingPortalPage";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import AuthPage from './pages/AuthPage';
+import DashboardPage from './pages/DashboardPage';
+import UserPanelPage from './pages/UserPanelPage';
+import NotFound from './pages/NotFound';
+import AdminPanelPage from './pages/AdminPanelPage';
+import EnhancedAdminPanelPage from './pages/EnhancedAdminPanelPage';
+import CmsManagerPage from './pages/CmsManagerPage';
+import ContentCreationPage from './pages/ContentCreationPage';
+import ClassifiedsPage from './pages/ClassifiedsPage';
+import ChatPage from './pages/ChatPage';
+import EventsPage from './pages/EventsPage';
+import DatingPortalPage from './pages/DatingPortalPage';
+import PremiumPage from './pages/PremiumPage';
+import LocalGroupsPage from './pages/LocalGroupsPage';
+import MarketplacePage from './pages/MarketplacePage';
+import GazettePage from './pages/GazettePage';
 
+// Providers
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from "sonner";
+
+// Create a client
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Router>
         <Routes>
-          {/* Original Witnica.info pages */}
-          <Route path="/original" element={<Index />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/ogloszenia" element={<ClassifiedsPage />} />
-          <Route path="/wydarzenia" element={<EventsPage />} />
-          
-          {/* New CMS pages */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/home-classic" element={<HomePage />} />
           <Route path="/login" element={<AuthPage />} />
-          <Route path="/register" element={<AuthPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/dashboard/new-content" element={<ContentCreationPage />} />
-          <Route path="/dashboard/edit-content/:id" element={<ContentCreationPage />} />
+          <Route path="/profile" element={<UserPanelPage />} />
+          <Route path="/admin" element={<AdminPanelPage />} />
+          <Route path="/admin-enhanced" element={<EnhancedAdminPanelPage />} />
+          <Route path="/cms" element={<CmsManagerPage />} />
+          <Route path="/editor" element={<ContentCreationPage />} />
+          <Route path="/classifieds" element={<ClassifiedsPage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/dating" element={<DatingPortalPage />} />
           <Route path="/premium" element={<PremiumPage />} />
-          
-          {/* New Admin, User and Dating Portal pages */}
-          <Route path="/admin" element={<EnhancedAdminPanelPage />} />
-          <Route path="/admin-classic" element={<AdminPanelPage />} />
-          <Route path="/user" element={<UserPanelPage />} />
-          <Route path="/profile/:username" element={<UserPanelPage />} />
-          <Route path="/randki" element={<DatingPortalPage />} />
-          <Route path="/dating-classic" element={<DatingPortalPage />} />
-          
-          {/* New Local Groups and Marketplace pages */}
-          <Route path="/grupy" element={<LocalGroupsPage />} />
+          <Route path="/groups" element={<LocalGroupsPage />} />
           <Route path="/rynek" element={<MarketplacePage />} />
-          
-          {/* Catch-all route for 404 */}
+          <Route path="/gazeta" element={<GazettePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+      </Router>
+      <Toaster position="top-right" />
+    </QueryClientProvider>
+  );
+}
 
 export default App;
