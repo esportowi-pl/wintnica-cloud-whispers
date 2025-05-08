@@ -35,15 +35,47 @@ const mockNotifications = [
 
 const AdminPanelPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('users');
+
+  // Filter data based on search query
+  const filteredUsers = mockUsers.filter(user => 
+    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const filteredContent = mockContent.filter(content => 
+    content.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    content.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    content.status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const filteredNotifications = mockNotifications.filter(notification => 
+    notification.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    notification.type.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <MainLayout>
       <div className="container mx-auto py-8 px-4">
         <h1 className="text-3xl font-bold mb-8">Panel Administracyjny</h1>
         
-        <AdminSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <AdminSearch 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+          placeholder={
+            activeTab === 'users' ? "Szukaj użytkowników..." :
+            activeTab === 'content' ? "Szukaj treści..." :
+            activeTab === 'notifications' ? "Szukaj powiadomień..." :
+            "Szukaj ustawień..."
+          }
+        />
 
-        <Tabs defaultValue="users">
+        <Tabs 
+          defaultValue="users" 
+          value={activeTab}
+          onValueChange={setActiveTab}
+        >
           <TabsList className="mb-8">
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users size={16} />
@@ -64,15 +96,15 @@ const AdminPanelPage: React.FC = () => {
           </TabsList>
           
           <TabsContent value="users">
-            <UsersTab users={mockUsers} getStatusBadge={getStatusBadge} />
+            <UsersTab users={filteredUsers} getStatusBadge={getStatusBadge} />
           </TabsContent>
           
           <TabsContent value="content">
-            <ContentTab content={mockContent} getStatusBadge={getStatusBadge} />
+            <ContentTab content={filteredContent} getStatusBadge={getStatusBadge} />
           </TabsContent>
           
           <TabsContent value="notifications">
-            <NotificationsTab notifications={mockNotifications} getStatusBadge={getStatusBadge} />
+            <NotificationsTab notifications={filteredNotifications} getStatusBadge={getStatusBadge} />
           </TabsContent>
           
           <TabsContent value="settings">
