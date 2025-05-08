@@ -1,12 +1,10 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Edit, Trash2, Eye, BarChart2, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-
-import ContentListItem from './ContentListItem';
 import { mockContent } from '@/data/mockData';
+import ContentListItemCollection from './ContentListItemCollection';
 
 interface ContentListProps {
   limit?: number;
@@ -34,16 +32,13 @@ const ContentList: React.FC<ContentListProps> = ({ limit }) => {
 
   return (
     <div className="space-y-4">
-      {displayedContent.map((content) => (
-        <ContentListItem 
-          key={content.id}
-          content={content}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onView={handleView}
-          onStats={handleStats}
-        />
-      ))}
+      <ContentListItemCollection 
+        contentItems={displayedContent}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onView={handleView}
+        onStats={handleStats}
+      />
 
       {limit && mockContent.length > limit && (
         <Button 
