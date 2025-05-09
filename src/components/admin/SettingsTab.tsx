@@ -10,6 +10,10 @@ const SettingsTab: React.FC = () => {
   const [siteDescription, setSiteDescription] = useState("Portal miejski dla mieszkańców Witnicy");
   const [contactEmail, setContactEmail] = useState("kontakt@witnica.info");
   const [primaryColor, setPrimaryColor] = useState("#3b82f6");
+  const [secondaryColor, setSecondaryColor] = useState("#64748b");
+  const [headingFont, setHeadingFont] = useState("inter");
+  const [bodyFont, setBodyFont] = useState("inter");
+  const [fontSize, setFontSize] = useState(16);
   const [passwordStrength, setPasswordStrength] = useState("medium");
   const [loginAttempts, setLoginAttempts] = useState("5");
   const [requireEmailVerification, setRequireEmailVerification] = useState(true);
@@ -36,6 +40,14 @@ const SettingsTab: React.FC = () => {
           setContactEmail={setContactEmail}
           primaryColor={primaryColor}
           setPrimaryColor={setPrimaryColor}
+          secondaryColor={secondaryColor}
+          setSecondaryColor={setSecondaryColor}
+          headingFont={headingFont}
+          setHeadingFont={setHeadingFont}
+          bodyFont={bodyFont}
+          setBodyFont={setBodyFont}
+          fontSize={fontSize}
+          setFontSize={setFontSize}
           passwordStrength={passwordStrength}
           setPasswordStrength={setPasswordStrength}
           loginAttempts={loginAttempts}

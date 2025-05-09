@@ -16,6 +16,14 @@ interface SettingsTabsProps {
   setContactEmail: (value: string) => void;
   primaryColor: string;
   setPrimaryColor: (value: string) => void;
+  secondaryColor: string;
+  setSecondaryColor: (value: string) => void;
+  headingFont: string;
+  setHeadingFont: (value: string) => void;
+  bodyFont: string;
+  setBodyFont: (value: string) => void;
+  fontSize: number;
+  setFontSize: (value: number) => void;
   passwordStrength: string;
   setPasswordStrength: (value: string) => void;
   loginAttempts: string;
@@ -67,6 +75,14 @@ const SettingsTabs: React.FC<SettingsTabsProps> = (props) => {
         <AppearanceSettingsTab 
           primaryColor={props.primaryColor}
           setPrimaryColor={props.setPrimaryColor}
+          secondaryColor={props.secondaryColor}
+          setSecondaryColor={props.setSecondaryColor}
+          headingFont={props.headingFont}
+          setHeadingFont={props.setHeadingFont}
+          bodyFont={props.bodyFont}
+          setBodyFont={props.setBodyFont}
+          fontSize={props.fontSize}
+          setFontSize={props.setFontSize}
         />
       </TabsContent>
       

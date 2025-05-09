@@ -74,6 +74,16 @@ export default {
 					dark: '#E6E6E6',
 				}
 			},
+			fontFamily: {
+				inter: ['Inter', 'sans-serif'],
+				roboto: ['Roboto', 'sans-serif'],
+				opensans: ['Open Sans', 'sans-serif'],
+				lato: ['Lato', 'sans-serif'],
+				playfair: ['Playfair Display', 'serif'],
+				montserrat: ['Montserrat', 'sans-serif'],
+				sourcesans: ['Source Sans Pro', 'sans-serif'],
+				poppins: ['Poppins', 'sans-serif'],
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
