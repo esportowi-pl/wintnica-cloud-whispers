@@ -27,8 +27,16 @@ const ContentListItemCollection: React.FC<ContentListItemCollectionProps> = ({
   onView,
   onStats
 }) => {
+  if (contentItems.length === 0) {
+    return (
+      <div className="text-center py-8 text-muted-foreground">
+        Brak treści do wyświetlenia
+      </div>
+    );
+  }
+
   return (
-    <>
+    <div className="space-y-2">
       {contentItems.map((content) => (
         <ContentListItem 
           key={content.id}
@@ -39,7 +47,7 @@ const ContentListItemCollection: React.FC<ContentListItemCollectionProps> = ({
           onStats={onStats}
         />
       ))}
-    </>
+    </div>
   );
 };
 

@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Settings, FileText, Bell } from 'lucide-react';
+import { Users, Settings, FileText, Bell, Bug } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import UsersTab from '@/components/admin/UsersTab';
 import ContentTab from '@/components/admin/ContentTab';
 import NotificationsTab from '@/components/admin/NotificationsTab';
 import SettingsTab from '@/components/admin/SettingsTab';
+import DebuggerPanel from '@/components/admin/DebuggerPanel';
 import AdminSearch from '@/components/admin/AdminSearch';
 import { getStatusBadge } from '@/utils/statusBadges';
 
@@ -67,6 +68,7 @@ const AdminPanelPage: React.FC = () => {
             activeTab === 'users' ? "Szukaj użytkowników..." :
             activeTab === 'content' ? "Szukaj treści..." :
             activeTab === 'notifications' ? "Szukaj powiadomień..." :
+            activeTab === 'debugger' ? "Szukaj logów..." :
             "Szukaj ustawień..."
           }
         />
@@ -93,6 +95,10 @@ const AdminPanelPage: React.FC = () => {
               <Settings size={16} />
               <span>Ustawienia</span>
             </TabsTrigger>
+            <TabsTrigger value="debugger" className="flex items-center gap-2">
+              <Bug size={16} />
+              <span>Debugger</span>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="users">
@@ -109,6 +115,10 @@ const AdminPanelPage: React.FC = () => {
           
           <TabsContent value="settings">
             <SettingsTab />
+          </TabsContent>
+          
+          <TabsContent value="debugger">
+            <DebuggerPanel />
           </TabsContent>
         </Tabs>
       </div>
