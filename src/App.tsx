@@ -49,7 +49,26 @@ function App() {
           {/* Admin routes */}
           <Route path="/admin" element={<AdminPanelPage />} />
           <Route path="/admin-enhanced" element={<EnhancedAdminPanelPage />} />
+          
+          {/* CMS Manager routes */}
           <Route path="/cms" element={<CmsManagerPage />} />
+          <Route path="/cms/content" element={<CmsManagerPage />} />
+          <Route path="/cms/content/articles" element={<CmsManagerPage />} />
+          <Route path="/cms/content/pages" element={<CmsManagerPage />} />
+          <Route path="/cms/content/media" element={<CmsManagerPage />} />
+          <Route path="/cms/groups" element={<CmsManagerPage />} />
+          <Route path="/cms/groups/list" element={<CmsManagerPage />} />
+          <Route path="/cms/groups/requests" element={<CmsManagerPage />} />
+          <Route path="/cms/market" element={<CmsManagerPage />} />
+          <Route path="/cms/market/listings" element={<CmsManagerPage />} />
+          <Route path="/cms/market/categories" element={<CmsManagerPage />} />
+          <Route path="/cms/gazette" element={<CmsManagerPage />} />
+          <Route path="/cms/gazette/issues" element={<CmsManagerPage />} />
+          <Route path="/cms/gazette/subscriptions" element={<CmsManagerPage />} />
+          <Route path="/cms/handmade" element={<CmsManagerPage />} />
+          <Route path="/cms/handmade/products" element={<CmsManagerPage />} />
+          <Route path="/cms/handmade/creators" element={<CmsManagerPage />} />
+          <Route path="/cms/settings" element={<CmsManagerPage />} />
           
           {/* Content creation */}
           <Route path="/editor" element={<ContentCreationPage />} />
