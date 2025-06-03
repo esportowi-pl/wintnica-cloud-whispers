@@ -161,6 +161,137 @@ export type Database = {
           },
         ]
       }
+      dating_matches: {
+        Row: {
+          id: string
+          is_active: boolean | null
+          matched_at: string | null
+          user1_id: string | null
+          user2_id: string | null
+        }
+        Insert: {
+          id?: string
+          is_active?: boolean | null
+          matched_at?: string | null
+          user1_id?: string | null
+          user2_id?: string | null
+        }
+        Update: {
+          id?: string
+          is_active?: boolean | null
+          matched_at?: string | null
+          user1_id?: string | null
+          user2_id?: string | null
+        }
+        Relationships: []
+      }
+      dating_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          match_id: string | null
+          read_at: string | null
+          sender_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          match_id?: string | null
+          read_at?: string | null
+          sender_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          match_id?: string | null
+          read_at?: string | null
+          sender_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dating_messages_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "dating_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dating_profiles: {
+        Row: {
+          active: boolean | null
+          age: number
+          bio: string | null
+          created_at: string | null
+          display_name: string
+          id: string
+          interests: string[] | null
+          last_active: string | null
+          location: string | null
+          photos: string[] | null
+          updated_at: string | null
+          user_id: string | null
+          verified: boolean | null
+        }
+        Insert: {
+          active?: boolean | null
+          age: number
+          bio?: string | null
+          created_at?: string | null
+          display_name: string
+          id?: string
+          interests?: string[] | null
+          last_active?: string | null
+          location?: string | null
+          photos?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Update: {
+          active?: boolean | null
+          age?: number
+          bio?: string | null
+          created_at?: string | null
+          display_name?: string
+          id?: string
+          interests?: string[] | null
+          last_active?: string | null
+          location?: string | null
+          photos?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
+      dating_swipes: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_like: boolean
+          swiped_id: string | null
+          swiper_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_like: boolean
+          swiped_id?: string | null
+          swiper_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_like?: boolean
+          swiped_id?: string | null
+          swiper_id?: string | null
+        }
+        Relationships: []
+      }
       game_servers: {
         Row: {
           created_at: string
@@ -194,6 +325,171 @@ export type Database = {
           name?: string
           region?: string
           status?: string
+        }
+        Relationships: []
+      }
+      marketplace_categories: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          order_index: number | null
+          parent_id: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          order_index?: number | null
+          parent_id?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          order_index?: number | null
+          parent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          product_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          product_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          product_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_favorites_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          product_id: string | null
+          read_at: string | null
+          receiver_id: string | null
+          sender_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          product_id?: string | null
+          read_at?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          product_id?: string | null
+          read_at?: string | null
+          receiver_id?: string | null
+          sender_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_messages_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_products: {
+        Row: {
+          category: string
+          condition: string | null
+          created_at: string | null
+          description: string | null
+          favorites_count: number | null
+          id: string
+          images: string[] | null
+          location: string | null
+          price: number | null
+          seller_id: string | null
+          status: string | null
+          subcategory: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+          views_count: number | null
+        }
+        Insert: {
+          category: string
+          condition?: string | null
+          created_at?: string | null
+          description?: string | null
+          favorites_count?: number | null
+          id?: string
+          images?: string[] | null
+          location?: string | null
+          price?: number | null
+          seller_id?: string | null
+          status?: string | null
+          subcategory?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          category?: string
+          condition?: string | null
+          created_at?: string | null
+          description?: string | null
+          favorites_count?: number | null
+          id?: string
+          images?: string[] | null
+          location?: string | null
+          price?: number | null
+          seller_id?: string | null
+          status?: string | null
+          subcategory?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+          views_count?: number | null
         }
         Relationships: []
       }
