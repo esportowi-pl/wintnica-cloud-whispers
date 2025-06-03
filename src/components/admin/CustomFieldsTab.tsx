@@ -1,18 +1,25 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle, Edit, Trash2, GripVertical } from 'lucide-react';
-import { CustomField } from './types/customField';
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+
+interface CustomField {
+  id: number;
+  name: string;
+  type: string;
+  required: boolean;
+  enabled: boolean;
+  visibleToUsers: boolean;
+  defaultValue: string;
+  description: string;
+  order: number;
+}
 
 interface CustomFieldsTabProps {
   initialCustomFields: CustomField[];
@@ -20,358 +27,234 @@ interface CustomFieldsTabProps {
 
 const CustomFieldsTab: React.FC<CustomFieldsTabProps> = ({ initialCustomFields }) => {
   const [customFields, setCustomFields] = useState<CustomField[]>(initialCustomFields);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [editingField, setEditingField] = useState<CustomField | null>(null);
-  const [newField, setNewField] = useState<Partial<CustomField>>({
-    name: '',
-    type: 'text',
-    required: false,
-    enabled: true,
-    visibleToUsers: true,
-    defaultValue: '',
-    description: ''
-  });
-
-  const handleToggleEnabled = (id: number) => {
-    setCustomFields(fields => 
-      fields.map(field => 
-        field.id === id ? { ...field, enabled: !field.enabled } : field
-      )
-    );
-    toast.success("Status pola został zaktualizowany");
-  };
-
-  const handleToggleRequired = (id: number) => {
-    setCustomFields(fields => 
-      fields.map(field => 
-        field.id === id ? { ...field, required: !field.required } : field
-      )
-    );
-    toast.success("Wymagalność pola została zaktualizowana");
-  };
-
-  const handleToggleVisibility = (id: number) => {
-    setCustomFields(fields => 
-      fields.map(field => 
-        field.id === id ? { ...field, visibleToUsers: !field.visibleToUsers } : field
-      )
-    );
-    toast.success("Widoczność pola została zaktualizowana");
-  };
+  const [newFieldName, setNewFieldName] = useState("");
+  const [newFieldType, setNewFieldType] = useState("text");
+  const [editingField, setEditingField] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editType, setEditType] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editDefaultValue, setEditDefaultValue] = useState("");
+  const [editRequired, setEditRequired] = useState(false);
+  const [editEnabled, setEditEnabled] = useState(true);
+  const [editVisibleToUsers, setEditVisibleToUsers] = useState(true);
 
   const handleAddField = () => {
-    if (!newField.name) {
-      toast.error("Nazwa pola jest wymagana");
+    if (newFieldName.trim() === "") {
+      toast.error("Nazwa pola nie może być pusta!");
       return;
     }
 
-    const field: CustomField = {
-      id: Math.max(...customFields.map(f => f.id)) + 1,
-      name: newField.name,
-      type: newField.type || 'text',
-      required: newField.required || false,
-      enabled: newField.enabled !== false,
-      visibleToUsers: newField.visibleToUsers !== false,
-      defaultValue: newField.defaultValue || '',
-      description: newField.description || '',
-      order: customFields.length + 1
-    };
-
-    setCustomFields([...customFields, field]);
-    setNewField({
-      name: '',
-      type: 'text',
+    const newField: CustomField = {
+      id: Date.now(),
+      name: newFieldName,
+      type: newFieldType,
       required: false,
       enabled: true,
       visibleToUsers: true,
-      defaultValue: '',
-      description: ''
-    });
-    setIsAddDialogOpen(false);
-    toast.success("Nowe pole zostało dodane");
+      defaultValue: "",
+      description: "",
+      order: customFields.length + 1,
+    };
+
+    setCustomFields([...customFields, newField]);
+    setNewFieldName("");
+    toast.success("Pole zostało dodane!");
   };
 
   const handleDeleteField = (id: number) => {
-    setCustomFields(fields => fields.filter(field => field.id !== id));
-    toast.success("Pole zostało usunięte");
+    setCustomFields(customFields.filter(field => field.id !== id));
+    toast.success("Pole zostało usunięte!");
   };
 
-  const handleEditField = (field: CustomField) => {
-    setEditingField(field);
-    setNewField({ ...field });
+  const startEdit = (field: CustomField) => {
+    setEditingField(field.id);
+    setEditName(field.name);
+    setEditType(field.type);
+    setEditDescription(field.description);
+    setEditDefaultValue(field.defaultValue);
+    setEditRequired(field.required);
+    setEditEnabled(field.enabled);
+    setEditVisibleToUsers(field.visibleToUsers);
   };
 
-  const handleUpdateField = () => {
-    if (!newField.name || !editingField) {
-      toast.error("Nazwa pola jest wymagana");
-      return;
-    }
-
-    setCustomFields(fields => 
-      fields.map(field => 
-        field.id === editingField.id 
-          ? { ...field, ...newField } as CustomField
-          : field
-      )
-    );
-    
+  const cancelEdit = () => {
     setEditingField(null);
-    setNewField({
-      name: '',
-      type: 'text',
-      required: false,
-      enabled: true,
-      visibleToUsers: true,
-      defaultValue: '',
-      description: ''
+  };
+
+  const saveEdit = () => {
+    if (!editingField) return;
+
+    const updatedFields = customFields.map(field => {
+      if (field.id === editingField) {
+        return {
+          ...field,
+          name: editName,
+          type: editType,
+          description: editDescription,
+          defaultValue: editDefaultValue,
+          required: editRequired,
+          enabled: editEnabled,
+          visibleToUsers: editVisibleToUsers,
+        };
+      }
+      return field;
     });
-    toast.success("Pole zostało zaktualizowane");
+
+    setCustomFields(updatedFields);
+    setEditingField(null);
+    toast.success("Pole zostało zaktualizowane!");
+  };
+
+  const getFieldTypeLabel = (type: string) => {
+    switch (type) {
+      case "text": return "Tekst";
+      case "textarea": return "Obszar tekstowy";
+      case "select": return "Lista wyboru";
+      case "checkbox": return "Pole wyboru";
+      case "date": return "Data";
+      case "number": return "Liczba";
+      default: return "Nieznany";
+    }
   };
 
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Pola niestandardowe</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
-              Zarządzaj dodatkowymi polami w formularzach użytkowników
-            </p>
-          </div>
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Dodaj pole
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Dodaj nowe pole</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="field-name">Nazwa pola</Label>
-                  <Input
-                    id="field-name"
-                    value={newField.name}
-                    onChange={(e) => setNewField({ ...newField, name: e.target.value })}
-                    placeholder="np. Telefon kontaktowy"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="field-type">Typ pola</Label>
-                  <Select 
-                    value={newField.type} 
-                    onValueChange={(value) => setNewField({ ...newField, type: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="text">Tekst</SelectItem>
-                      <SelectItem value="email">Email</SelectItem>
-                      <SelectItem value="number">Liczba</SelectItem>
-                      <SelectItem value="date">Data</SelectItem>
-                      <SelectItem value="select">Lista wyboru</SelectItem>
-                      <SelectItem value="textarea">Obszar tekstowy</SelectItem>
-                      <SelectItem value="checkbox">Pole wyboru</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="field-description">Opis</Label>
-                  <Textarea
-                    id="field-description"
-                    value={newField.description}
-                    onChange={(e) => setNewField({ ...newField, description: e.target.value })}
-                    placeholder="Opisz przeznaczenie tego pola"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="field-default">Wartość domyślna</Label>
-                  <Input
-                    id="field-default"
-                    value={newField.defaultValue}
-                    onChange={(e) => setNewField({ ...newField, defaultValue: e.target.value })}
-                    placeholder="Opcjonalna wartość domyślna"
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="field-required"
-                    checked={newField.required}
-                    onCheckedChange={(checked) => setNewField({ ...newField, required: checked })}
-                  />
-                  <Label htmlFor="field-required">Pole wymagane</Label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="field-visible"
-                    checked={newField.visibleToUsers}
-                    onCheckedChange={(checked) => setNewField({ ...newField, visibleToUsers: checked })}
-                  />
-                  <Label htmlFor="field-visible">Widoczne dla użytkowników</Label>
-                </div>
-
-                <Button onClick={handleAddField} className="w-full">
-                  Dodaj pole
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+      <CardHeader>
+        <CardTitle className="flex justify-between items-center">
+          <span>Pola niestandardowe</span>
+          <Button onClick={handleAddField}>
+            <Plus className="h-4 w-4 mr-2" />
+            Dodaj pole
+          </Button>
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-8"></TableHead>
-              <TableHead>Nazwa</TableHead>
-              <TableHead>Typ</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Wymagane</TableHead>
-              <TableHead>Widoczne</TableHead>
-              <TableHead>Opis</TableHead>
-              <TableHead className="text-right">Akcje</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {customFields.map((field) => (
-              <TableRow key={field.id}>
-                <TableCell>
-                  <GripVertical className="h-4 w-4 text-muted-foreground cursor-move" />
-                </TableCell>
-                <TableCell className="font-medium">{field.name}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{field.type}</Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={field.enabled}
-                      onCheckedChange={() => handleToggleEnabled(field.id)}
-                      size="sm"
+        <div className="space-y-4">
+          {customFields.map(field => (
+            <div key={field.id} className="border rounded-lg p-4 space-y-4">
+              {editingField === field.id ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Nazwa pola</Label>
+                    <Input 
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      placeholder="Nazwa pola"
                     />
-                    <Badge variant={field.enabled ? "default" : "secondary"}>
-                      {field.enabled ? "Włączone" : "Wyłączone"}
-                    </Badge>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={field.required}
-                      onCheckedChange={() => handleToggleRequired(field.id)}
-                      size="sm"
+                  
+                  <div>
+                    <Label>Typ pola</Label>
+                    <Select value={editType} onValueChange={setEditType}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="text">Tekst</SelectItem>
+                        <SelectItem value="textarea">Obszar tekstowy</SelectItem>
+                        <SelectItem value="select">Lista wyboru</SelectItem>
+                        <SelectItem value="checkbox">Pole wyboru</SelectItem>
+                        <SelectItem value="date">Data</SelectItem>
+                        <SelectItem value="number">Liczba</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="col-span-2">
+                    <Label>Opis</Label>
+                    <Input 
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      placeholder="Opis pola"
                     />
-                    <span className="text-sm">{field.required ? "Tak" : "Nie"}</span>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={field.visibleToUsers}
-                      onCheckedChange={() => handleToggleVisibility(field.id)}
-                      size="sm"
+                  
+                  <div>
+                    <Label>Wartość domyślna</Label>
+                    <Input 
+                      value={editDefaultValue}
+                      onChange={(e) => setEditDefaultValue(e.target.value)}
+                      placeholder="Wartość domyślna"
                     />
-                    <span className="text-sm">{field.visibleToUsers ? "Tak" : "Nie"}</span>
                   </div>
-                </TableCell>
-                <TableCell className="max-w-xs truncate text-sm text-muted-foreground">
-                  {field.description}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex gap-2 justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEditField(field)}
-                    >
+                  
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={editRequired}
+                        onCheckedChange={setEditRequired}
+                      />
+                      <Label>Wymagane</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={editEnabled}
+                        onCheckedChange={setEditEnabled}
+                      />
+                      <Label>Aktywne</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        checked={editVisibleToUsers}
+                        onCheckedChange={setEditVisibleToUsers}
+                      />
+                      <Label>Widoczne dla użytkowników</Label>
+                    </div>
+                  </div>
+                  
+                  <div className="col-span-2 flex justify-end space-x-2">
+                    <Button variant="outline" onClick={cancelEdit}>
+                      <X className="h-4 w-4 mr-2" />
+                      Anuluj
+                    </Button>
+                    <Button onClick={saveEdit}>
+                      <Save className="h-4 w-4 mr-2" />
+                      Zapisz
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-semibold text-lg">{field.name}</h3>
+                      <Badge variant="outline">{getFieldTypeLabel(field.type)}</Badge>
+                      {field.required && <Badge variant="destructive">Wymagane</Badge>}
+                      {!field.enabled && <Badge variant="secondary">Nieaktywne</Badge>}
+                      {field.visibleToUsers && <Badge variant="default">Widoczne publicznie</Badge>}
+                    </div>
+                    
+                    {field.description && (
+                      <p className="text-muted-foreground text-sm">{field.description}</p>
+                    )}
+                    
+                    {field.defaultValue && (
+                      <p className="text-sm"><strong>Wartość domyślna:</strong> {field.defaultValue}</p>
+                    )}
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Button variant="outline" size="sm" onClick={() => startEdit(field)}>
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteField(field.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
+                    <Button variant="destructive" size="sm" onClick={() => handleDeleteField(field.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {editingField && (
-          <Dialog open={!!editingField} onOpenChange={() => setEditingField(null)}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edytuj pole: {editingField.name}</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="edit-field-name">Nazwa pola</Label>
-                  <Input
-                    id="edit-field-name"
-                    value={newField.name}
-                    onChange={(e) => setNewField({ ...newField, name: e.target.value })}
-                  />
                 </div>
-                
-                <div>
-                  <Label htmlFor="edit-field-type">Typ pola</Label>
-                  <Select 
-                    value={newField.type} 
-                    onValueChange={(value) => setNewField({ ...newField, type: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="text">Tekst</SelectItem>
-                      <SelectItem value="email">Email</SelectItem>
-                      <SelectItem value="number">Liczba</SelectItem>
-                      <SelectItem value="date">Data</SelectItem>
-                      <SelectItem value="select">Lista wyboru</SelectItem>
-                      <SelectItem value="textarea">Obszar tekstowy</SelectItem>
-                      <SelectItem value="checkbox">Pole wyboru</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="edit-field-description">Opis</Label>
-                  <Textarea
-                    id="edit-field-description"
-                    value={newField.description}
-                    onChange={(e) => setNewField({ ...newField, description: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="edit-field-default">Wartość domyślna</Label>
-                  <Input
-                    id="edit-field-default"
-                    value={newField.defaultValue}
-                    onChange={(e) => setNewField({ ...newField, defaultValue: e.target.value })}
-                  />
-                </div>
-
-                <Button onClick={handleUpdateField} className="w-full">
-                  Zaktualizuj pole
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
+              )}
+            </div>
+          ))}
+          
+          {customFields.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>Brak zdefiniowanych pól niestandardowych.</p>
+              <p className="text-sm">Kliknij "Dodaj pole", aby utworzyć nowe pole.</p>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
