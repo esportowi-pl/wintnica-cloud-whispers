@@ -127,23 +127,53 @@ const DatingApp: React.FC = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      // Pobierz dopasowania
+      const { data: matchesData, error: matchesError } = await supabase
         .from('dating_matches')
-        .select(`
-          *,
-          profile:dating_profiles(*)
-        `)
+        .select('*')
         .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`)
         .eq('is_active', true);
 
-      if (error) {
-        console.error('Error loading matches:', error);
+      if (matchesError) {
+        console.error('Error loading matches:', matchesError);
         setMatches([]);
-      } else {
-        setMatches(data || []);
+        return;
       }
+
+      if (!matchesData || matchesData.length === 0) {
+        setMatches([]);
+        return;
+      }
+
+      // Dla każdego dopasowania, pobierz profil drugiej osoby
+      const matchesWithProfiles = await Promise.all(
+        matchesData.map(async (match) => {
+          const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
+          
+          const { data: profileData } = await supabase
+            .from('dating_profiles')
+            .select('*')
+            .eq('user_id', otherUserId)
+            .single();
+
+          return {
+            ...match,
+            profile: profileData || {
+              id: '',
+              user_id: otherUserId,
+              display_name: 'Nieznany użytkownik',
+              age: 0,
+              photos: ['/placeholder.svg'],
+              verified: false
+            }
+          };
+        })
+      );
+
+      setMatches(matchesWithProfiles);
     } catch (error) {
       console.error('Error in loadMatches:', error);
+      setMatches([]);
     }
   };
 
