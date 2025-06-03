@@ -6,4 +6,8 @@ export interface User {
   role: string;
   status: string;
   joined: string;
+  lastActive: string;
+  verified: boolean;
+  posts: number;
+  premium: boolean;
 }

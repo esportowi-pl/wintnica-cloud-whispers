@@ -46,8 +46,8 @@ function App() {
           <Route path="/profile" element={<UserPanelPage />} />
           <Route path="/content/:id" element={<HomePage />} />
           
-          {/* Admin routes */}
-          <Route path="/admin" element={<AdminPanelPage />} />
+          {/* Admin routes - updated to use the enhanced admin panel */}
+          <Route path="/admin" element={<EnhancedAdminPanelPage />} />
           <Route path="/admin-enhanced" element={<EnhancedAdminPanelPage />} />
           
           {/* CMS Manager routes */}

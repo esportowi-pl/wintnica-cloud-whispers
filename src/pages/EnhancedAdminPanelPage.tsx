@@ -2,11 +2,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Settings, FileText, Bell } from 'lucide-react';
+import { Users, Settings, FileText, Bell, Heart, ShoppingCart, Newspaper, BarChart } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
-
-// Import mock data
-import { mockUsers, mockContent, mockNotifications, initialCustomFields, mockAnalytics } from '@/components/admin/mockData';
 
 // Import components
 import PageHeader from '@/components/admin/PageHeader';
@@ -20,13 +17,25 @@ import NotificationSendForm from '@/components/admin/NotificationSendForm';
 import NotificationStats from '@/components/admin/NotificationStats';
 import NotificationsTab from '@/components/admin/NotificationsTab';
 import SettingsTab from '@/components/admin/SettingsTab';
+import VisitsStatsPanel from '@/components/admin/VisitsStatsPanel';
+import DatingPanel from '@/components/admin/DatingPanel';
+import MarketPanel from '@/components/admin/MarketPanel';
+import GazettePanel from '@/components/admin/GazettePanel';
+
+// Import mock data
+import { mockUsers, mockContent, mockNotifications, initialCustomFields, mockAnalytics } from '@/components/admin/mockData';
 
 const EnhancedAdminPanelPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <MainLayout>
-      <div className="container mx-auto py-8 px-4">
+      <motion.div 
+        className="container mx-auto py-8 px-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {/* Header with breadcrumbs */}
         <PageHeader />
         
@@ -36,28 +45,44 @@ const EnhancedAdminPanelPage = () => {
         {/* Global Search */}
         <GlobalSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-        <Tabs defaultValue="users">
-          <TabsList className="mb-8">
-            <TabsTrigger value="users" className="flex items-center gap-2">
+        <Tabs defaultValue="users" className="mt-8">
+          <TabsList className="mb-8 bg-white shadow-lg border rounded-lg p-1">
+            <TabsTrigger value="users" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
               <Users size={16} />
               <span>Użytkownicy</span>
             </TabsTrigger>
-            <TabsTrigger value="content" className="flex items-center gap-2">
+            <TabsTrigger value="content" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
               <FileText size={16} />
               <span>Treści</span>
             </TabsTrigger>
-            <TabsTrigger value="custom-fields" className="flex items-center gap-2">
+            <TabsTrigger value="visits" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+              <BarChart size={16} />
+              <span>Statystyki odwiedzin</span>
+            </TabsTrigger>
+            <TabsTrigger value="dating" className="flex items-center gap-2 data-[state=active]:bg-pink-500 data-[state=active]:text-white">
+              <Heart size={16} />
+              <span>Portal randkowy</span>
+            </TabsTrigger>
+            <TabsTrigger value="market" className="flex items-center gap-2 data-[state=active]:bg-green-500 data-[state=active]:text-white">
+              <ShoppingCart size={16} />
+              <span>Rynek lokalny</span>
+            </TabsTrigger>
+            <TabsTrigger value="gazette" className="flex items-center gap-2 data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+              <Newspaper size={16} />
+              <span>Gazeta</span>
+            </TabsTrigger>
+            <TabsTrigger value="custom-fields" className="flex items-center gap-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white">
               <FileText size={16} />
               <span>Pola niestandardowe</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2">
+            <TabsTrigger value="notifications" className="flex items-center gap-2 data-[state=active]:bg-red-500 data-[state=active]:text-white">
               <Bell size={16} />
               <span>Powiadomienia</span>
-              <div className="ml-1 bg-primary px-1.5 py-0.5 rounded-full text-xs text-white">
+              <div className="ml-1 bg-red-500 text-white px-1.5 py-0.5 rounded-full text-xs">
                 {mockNotifications.filter(n => !n.read).length}
               </div>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
+            <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-gray-500 data-[state=active]:text-white">
               <Settings size={16} />
               <span>Ustawienia</span>
             </TabsTrigger>
@@ -67,7 +92,7 @@ const EnhancedAdminPanelPage = () => {
           <TabsContent value="users">
             <UsersTab 
               users={mockUsers} 
-              getStatusBadge={StatusBadge}
+              getStatusBadge={(status: string) => <StatusBadge status={status} />}
             />
           </TabsContent>
           
@@ -75,22 +100,77 @@ const EnhancedAdminPanelPage = () => {
           <TabsContent value="content">
             <ContentTab 
               content={mockContent} 
-              getStatusBadge={StatusBadge} 
+              getStatusBadge={(status: string) => <StatusBadge status={status} />} 
             />
+          </TabsContent>
+          
+          {/* Visits Stats Tab */}
+          <TabsContent value="visits">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <VisitsStatsPanel />
+            </motion.div>
+          </TabsContent>
+          
+          {/* Dating Tab */}
+          <TabsContent value="dating">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DatingPanel />
+            </motion.div>
+          </TabsContent>
+          
+          {/* Market Tab */}
+          <TabsContent value="market">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <MarketPanel />
+            </motion.div>
+          </TabsContent>
+          
+          {/* Gazette Tab */}
+          <TabsContent value="gazette">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <GazettePanel />
+            </motion.div>
           </TabsContent>
           
           {/* Custom Fields Tab */}
           <TabsContent value="custom-fields">
-            <CustomFieldsTab initialCustomFields={initialCustomFields} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CustomFieldsTab initialCustomFields={initialCustomFields} />
+            </motion.div>
           </TabsContent>
           
           {/* Notifications Tab */}
           <TabsContent value="notifications">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
               <div className="md:col-span-2">
                 <NotificationsTab 
                   notifications={mockNotifications}
-                  getStatusBadge={StatusBadge}
+                  getStatusBadge={(status: string) => <StatusBadge status={status} />}
                 />
               </div>
               
@@ -98,15 +178,21 @@ const EnhancedAdminPanelPage = () => {
                 <NotificationSendForm />
                 <NotificationStats />
               </div>
-            </div>
+            </motion.div>
           </TabsContent>
           
           {/* Settings Tab */}
           <TabsContent value="settings">
-            <SettingsTab />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SettingsTab />
+            </motion.div>
           </TabsContent>
         </Tabs>
-      </div>
+      </motion.div>
     </MainLayout>
   );
 };
