@@ -10,8 +10,8 @@ interface ActivityLog {
   id: string;
   user_id: string;
   action: string;
-  target_type: string;
-  target_id: string;
+  target_type: string | null;
+  target_id: string | null;
   details: any;
   created_at: string;
   profiles?: {
@@ -27,32 +27,46 @@ export default function ActivityLogsTab() {
 
   const loadActivityLogs = async () => {
     try {
+      // First try to load with profiles join
       const { data, error } = await supabase
         .from('admin_activity_logs')
         .select(`
-          *,
-          profiles(username, display_name)
+          id,
+          user_id,
+          action,
+          target_type,
+          target_id,
+          details,
+          created_at,
+          profiles!inner(username, display_name)
         `)
         .order('created_at', { ascending: false })
         .limit(100);
 
-      if (error) throw error;
-      setLogs(data || []);
-    } catch (error) {
-      console.error('Error loading activity logs:', error);
-      // Fallback: load logs without profiles join
-      try {
-        const { data, error } = await supabase
+      if (error) {
+        console.error('Error with profiles join:', error);
+        // Fallback: load logs without profiles join
+        const { data: fallbackData, error: fallbackError } = await supabase
           .from('admin_activity_logs')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(100);
 
-        if (error) throw error;
+        if (fallbackError) throw fallbackError;
+        
+        // Transform data to match our interface
+        const transformedData = (fallbackData || []).map(log => ({
+          ...log,
+          profiles: null
+        }));
+        
+        setLogs(transformedData);
+      } else {
         setLogs(data || []);
-      } catch (fallbackError) {
-        console.error('Fallback error loading activity logs:', fallbackError);
       }
+    } catch (error) {
+      console.error('Error loading activity logs:', error);
+      setLogs([]);
     } finally {
       setLoading(false);
     }
