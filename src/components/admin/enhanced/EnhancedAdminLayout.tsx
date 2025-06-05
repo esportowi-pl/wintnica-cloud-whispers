@@ -23,7 +23,7 @@ import {
   BarChart, 
   Settings, 
   Shield, 
-  Ad,
+  Megaphone,
   Moon,
   Sun,
   LogOut,
@@ -48,7 +48,7 @@ const menuItems = [
   { id: 'dating', label: 'Portal randkowy', icon: Heart, color: 'pink' },
   { id: 'marketplace', label: 'Rynek lokalny', icon: ShoppingCart, color: 'emerald' },
   { id: 'gazette', label: 'Gazeta', icon: Newspaper, color: 'amber' },
-  { id: 'ads', label: 'Reklamy', icon: Ad, color: 'red' },
+  { id: 'ads', label: 'Reklamy', icon: Megaphone, color: 'red' },
   { id: 'activity', label: 'Logi aktywności', icon: Activity, color: 'gray' },
   { id: 'settings', label: 'Ustawienia', icon: Settings, color: 'slate' }
 ];

@@ -17,7 +17,7 @@ interface ActivityLog {
   profiles?: {
     username: string;
     display_name: string;
-  };
+  } | null;
 }
 
 export default function ActivityLogsTab() {
@@ -40,6 +40,19 @@ export default function ActivityLogsTab() {
       setLogs(data || []);
     } catch (error) {
       console.error('Error loading activity logs:', error);
+      // Fallback: load logs without profiles join
+      try {
+        const { data, error } = await supabase
+          .from('admin_activity_logs')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(100);
+
+        if (error) throw error;
+        setLogs(data || []);
+      } catch (fallbackError) {
+        console.error('Fallback error loading activity logs:', fallbackError);
+      }
     } finally {
       setLoading(false);
     }

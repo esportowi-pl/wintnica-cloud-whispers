@@ -10,6 +10,7 @@ interface SiteSettings {
   secondary_color: string;
   dark_mode_enabled: boolean;
   maintenance_mode: boolean;
+  email_confirmation_required: boolean;
 }
 
 export function useSiteSettings() {
@@ -20,7 +21,8 @@ export function useSiteSettings() {
     primary_color: '#3b82f6',
     secondary_color: '#64748b',
     dark_mode_enabled: true,
-    maintenance_mode: false
+    maintenance_mode: false,
+    email_confirmation_required: true
   });
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +36,12 @@ export function useSiteSettings() {
 
       const settingsObj: any = {};
       data?.forEach(item => {
-        settingsObj[item.key] = JSON.parse(item.value);
+        try {
+          settingsObj[item.key] = JSON.parse(item.value as string);
+        } catch (e) {
+          console.error('Error parsing setting value:', item.key, item.value);
+          settingsObj[item.key] = item.value;
+        }
       });
 
       setSettings(prev => ({ ...prev, ...settingsObj }));

@@ -3,43 +3,28 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { toast } from 'sonner';
-import { Upload, Save, Palette, Globe } from 'lucide-react';
+import { Save, Upload, Palette, Globe, Shield, Mail } from 'lucide-react';
 
 export default function EnhancedSettingsTab() {
   const { settings, updateSetting, loading } = useSiteSettings();
-  const [localSettings, setLocalSettings] = useState(settings);
   const [saving, setSaving] = useState(false);
 
-  const handleSave = async () => {
+  const handleSaveSetting = async (key: string, value: any) => {
     setSaving(true);
     try {
-      for (const [key, value] of Object.entries(localSettings)) {
-        if (value !== settings[key as keyof typeof settings]) {
-          await updateSetting(key as keyof typeof settings, value);
-        }
-      }
-      toast.success('Ustawienia zostały zapisane!');
+      await updateSetting(key as any, value);
+      toast.success('Ustawienie zapisane pomyślnie');
     } catch (error) {
-      toast.error('Błąd podczas zapisywania ustawień');
+      toast.error('Błąd podczas zapisywania ustawienia');
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // In a real app, you would upload to Supabase Storage here
-    // For now, we'll just simulate it
-    const fakeUrl = URL.createObjectURL(file);
-    setLocalSettings(prev => ({ ...prev, logo_url: fakeUrl }));
-    toast.success('Logo zostało przesłane!');
   };
 
   if (loading) {
@@ -47,9 +32,9 @@ export default function EnhancedSettingsTab() {
       <div className="space-y-6">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-40 bg-gray-200 rounded"></div>
+              <div key={i} className="h-20 bg-gray-200 rounded"></div>
             ))}
           </div>
         </div>
@@ -59,162 +44,223 @@ export default function EnhancedSettingsTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Ustawienia zaawansowane</h1>
-        <Button onClick={handleSave} disabled={saving}>
-          <Save className="h-4 w-4 mr-2" />
-          {saving ? 'Zapisywanie...' : 'Zapisz zmiany'}
-        </Button>
-      </div>
+      <h1 className="text-3xl font-bold">Ustawienia systemu</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Globe className="h-5 w-5" />
-              Podstawowe informacje
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="site_name">Nazwa portalu</Label>
-              <Input
-                id="site_name"
-                value={localSettings.site_name}
-                onChange={(e) => setLocalSettings(prev => ({ ...prev, site_name: e.target.value }))}
-              />
-            </div>
-            <div>
-              <Label htmlFor="site_description">Opis portalu</Label>
-              <Textarea
-                id="site_description"
-                value={localSettings.site_description}
-                onChange={(e) => setLocalSettings(prev => ({ ...prev, site_description: e.target.value }))}
-                rows={3}
-              />
-            </div>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="general" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="general" className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            Ogólne
+          </TabsTrigger>
+          <TabsTrigger value="branding" className="flex items-center gap-2">
+            <Palette className="h-4 w-4" />
+            Branding
+          </TabsTrigger>
+          <TabsTrigger value="auth" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Autoryzacja
+          </TabsTrigger>
+          <TabsTrigger value="email" className="flex items-center gap-2">
+            <Mail className="h-4 w-4" />
+            Email
+          </TabsTrigger>
+        </TabsList>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Upload className="h-5 w-5" />
-              Logo i branding
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="logo">Logo portalu</Label>
-              <div className="flex items-center gap-4 mt-2">
-                {localSettings.logo_url && (
-                  <img
-                    src={localSettings.logo_url}
-                    alt="Logo"
-                    className="h-12 w-12 rounded border"
+        <TabsContent value="general" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Podstawowe ustawienia strony
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="site-name">Nazwa strony</Label>
+                <Input
+                  id="site-name"
+                  value={settings.site_name}
+                  onChange={(e) => handleSaveSetting('site_name', e.target.value)}
+                  placeholder="Nazwa Twojej strony"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="site-description">Opis strony</Label>
+                <Textarea
+                  id="site-description"
+                  value={settings.site_description}
+                  onChange={(e) => handleSaveSetting('site_description', e.target.value)}
+                  placeholder="Krótki opis Twojej strony"
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Tryb konserwacji</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Wyłącz stronę dla użytkowników (admini nadal mają dostęp)
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.maintenance_mode}
+                  onCheckedChange={(checked) => handleSaveSetting('maintenance_mode', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Tryb ciemny</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Włącz obsługę trybu ciemnego dla użytkowników
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.dark_mode_enabled}
+                  onCheckedChange={(checked) => handleSaveSetting('dark_mode_enabled', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="branding" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Palette className="h-5 w-5" />
+                Logo i kolory
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="logo-url">URL Logo</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="logo-url"
+                    value={settings.logo_url}
+                    onChange={(e) => handleSaveSetting('logo_url', e.target.value)}
+                    placeholder="https://example.com/logo.png"
                   />
-                )}
-                <div>
-                  <input
-                    type="file"
-                    id="logo"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                  />
-                  <Button
-                    variant="outline"
-                    onClick={() => document.getElementById('logo')?.click()}
-                  >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Prześlij logo
+                  <Button variant="outline" size="icon">
+                    <Upload className="h-4 w-4" />
                   </Button>
                 </div>
+                {settings.logo_url && (
+                  <div className="mt-2">
+                    <img 
+                      src={settings.logo_url} 
+                      alt="Logo preview" 
+                      className="h-16 w-16 object-contain border rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = '';
+                        e.currentTarget.alt = 'Błąd ładowania logo';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="h-5 w-5" />
-              Kolory i wygląd
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="primary_color">Kolor główny</Label>
-              <div className="flex items-center gap-2 mt-2">
-                <input
-                  type="color"
-                  id="primary_color"
-                  value={localSettings.primary_color}
-                  onChange={(e) => setLocalSettings(prev => ({ ...prev, primary_color: e.target.value }))}
-                  className="h-10 w-20 rounded border cursor-pointer"
-                />
-                <Input
-                  value={localSettings.primary_color}
-                  onChange={(e) => setLocalSettings(prev => ({ ...prev, primary_color: e.target.value }))}
-                  className="flex-1"
-                />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="secondary_color">Kolor drugorzędny</Label>
-              <div className="flex items-center gap-2 mt-2">
-                <input
-                  type="color"
-                  id="secondary_color"
-                  value={localSettings.secondary_color}
-                  onChange={(e) => setLocalSettings(prev => ({ ...prev, secondary_color: e.target.value }))}
-                  className="h-10 w-20 rounded border cursor-pointer"
-                />
-                <Input
-                  value={localSettings.secondary_color}
-                  onChange={(e) => setLocalSettings(prev => ({ ...prev, secondary_color: e.target.value }))}
-                  className="flex-1"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="primary-color">Kolor główny</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="primary-color"
+                      type="color"
+                      value={settings.primary_color}
+                      onChange={(e) => handleSaveSetting('primary_color', e.target.value)}
+                      className="w-16 h-10 p-1"
+                    />
+                    <Input
+                      value={settings.primary_color}
+                      onChange={(e) => handleSaveSetting('primary_color', e.target.value)}
+                      placeholder="#3b82f6"
+                    />
+                  </div>
+                </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Funkcjonalności</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label>Tryb ciemny</Label>
-                <p className="text-sm text-muted-foreground">
-                  Pozwól użytkownikom na przełączanie trybu ciemnego
+                <div className="space-y-2">
+                  <Label htmlFor="secondary-color">Kolor pomocniczy</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="secondary-color"
+                      type="color"
+                      value={settings.secondary_color}
+                      onChange={(e) => handleSaveSetting('secondary_color', e.target.value)}
+                      className="w-16 h-10 p-1"
+                    />
+                    <Input
+                      value={settings.secondary_color}
+                      onChange={(e) => handleSaveSetting('secondary_color', e.target.value)}
+                      placeholder="#64748b"
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="auth" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                Ustawienia autoryzacji
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Wymagaj potwierdzenia emaila</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Użytkownicy muszą potwierdzić email przed aktywacją konta
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.email_confirmation_required}
+                  onCheckedChange={(checked) => handleSaveSetting('email_confirmation_required', checked)}
+                />
+              </div>
+
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-900 mb-2">Informacja</h4>
+                <p className="text-sm text-blue-700">
+                  Wyłączenie potwierdzania emaila przyspiesza proces rejestracji, 
+                  ale zmniejsza bezpieczeństwo. Zalecane tylko do testów.
                 </p>
               </div>
-              <Switch
-                checked={localSettings.dark_mode_enabled}
-                onCheckedChange={(checked) => 
-                  setLocalSettings(prev => ({ ...prev, dark_mode_enabled: checked }))
-                }
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <Label>Tryb konserwacji</Label>
-                <p className="text-sm text-muted-foreground">
-                  Wyłącz portal dla zwykłych użytkowników
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="email" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                Ustawienia email
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 bg-yellow-50 rounded-lg">
+                <h4 className="font-medium text-yellow-900 mb-2">W przygotowaniu</h4>
+                <p className="text-sm text-yellow-700">
+                  Ustawienia serwera SMTP i szablonów email będą dostępne wkrótce.
                 </p>
               </div>
-              <Switch
-                checked={localSettings.maintenance_mode}
-                onCheckedChange={(checked) => 
-                  setLocalSettings(prev => ({ ...prev, maintenance_mode: checked }))
-                }
-              />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      <div className="flex justify-end">
+        <Button disabled={saving} className="flex items-center gap-2">
+          <Save className="h-4 w-4" />
+          {saving ? 'Zapisywanie...' : 'Zapisz wszystkie zmiany'}
+        </Button>
       </div>
     </div>
   );

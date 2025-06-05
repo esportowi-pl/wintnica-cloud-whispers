@@ -8,6 +8,7 @@ import UserPanelPage from './pages/UserPanelPage';
 import NotFound from './pages/NotFound';
 import AdminPanelPage from './pages/AdminPanelPage';
 import EnhancedAdminPanelPage from './pages/EnhancedAdminPanelPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import CmsManagerPage from './pages/CmsManagerPage';
 import ContentCreationPage from './pages/ContentCreationPage';
 import ClassifiedsPage from './pages/ClassifiedsPage';
@@ -48,7 +49,8 @@ function App() {
             <Route path="/profile" element={<UserPanelPage />} />
             <Route path="/content/:id" element={<HomePage />} />
             
-            {/* Admin routes - updated to use the enhanced admin panel */}
+            {/* Admin routes */}
+            <Route path="/admin-login" element={<AdminLoginPage />} />
             <Route path="/admin" element={<EnhancedAdminPanelPage />} />
             <Route path="/admin-enhanced" element={<EnhancedAdminPanelPage />} />
             
