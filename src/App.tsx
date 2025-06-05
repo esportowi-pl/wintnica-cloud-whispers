@@ -21,7 +21,7 @@ import GazettePage from './pages/GazettePage';
 
 // Providers
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from '@/components/auth/AuthProvider';
+import { AuthProvider } from '@/hooks/useAuth';
 import { Toaster } from "sonner";
 
 // Create a client
