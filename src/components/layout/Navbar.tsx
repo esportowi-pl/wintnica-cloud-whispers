@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ import {
   LogOut,
   LogIn
 } from 'lucide-react';
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/hooks/useAuth";
 import AuthModal from "@/components/auth/AuthModal";
 import { toast } from "sonner";
 
