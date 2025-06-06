@@ -14,10 +14,6 @@ interface ActivityLog {
   target_id: string | null;
   details: any;
   created_at: string;
-  profiles?: {
-    username: string;
-    display_name: string;
-  } | null;
 }
 
 export default function ActivityLogsTab() {
@@ -27,45 +23,20 @@ export default function ActivityLogsTab() {
 
   const loadActivityLogs = async () => {
     try {
-      // First try to load with profiles join
       const { data, error } = await supabase
         .from('admin_activity_logs')
-        .select(`
-          id,
-          user_id,
-          action,
-          target_type,
-          target_id,
-          details,
-          created_at,
-          profiles!inner(username, display_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
 
       if (error) {
-        console.error('Error with profiles join:', error);
-        // Fallback: load logs without profiles join
-        const { data: fallbackData, error: fallbackError } = await supabase
-          .from('admin_activity_logs')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(100);
-
-        if (fallbackError) throw fallbackError;
-        
-        // Transform data to match our interface
-        const transformedData = (fallbackData || []).map(log => ({
-          ...log,
-          profiles: null
-        }));
-        
-        setLogs(transformedData);
+        console.error('Error loading activity logs:', error);
+        setLogs([]);
       } else {
         setLogs(data || []);
       }
     } catch (error) {
-      console.error('Error loading activity logs:', error);
+      console.error('Error in loadActivityLogs:', error);
       setLogs([]);
     } finally {
       setLoading(false);
@@ -79,7 +50,7 @@ export default function ActivityLogsTab() {
   const filteredLogs = logs.filter(log =>
     log.action.toLowerCase().includes(searchQuery.toLowerCase()) ||
     log.target_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    log.profiles?.username?.toLowerCase().includes(searchQuery.toLowerCase())
+    log.user_id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const getActionColor = (action: string) => {
@@ -144,7 +115,7 @@ export default function ActivityLogsTab() {
                       </Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Użytkownik: {log.profiles?.display_name || log.profiles?.username || 'Nieznany'}
+                      Użytkownik ID: {log.user_id}
                     </div>
                     {log.details && (
                       <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
