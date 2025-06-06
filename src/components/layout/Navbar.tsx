@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import AuthModal from "@/components/auth/AuthModal";
+import NavbarNotifications from "@/components/layout/navbar/NavbarNotifications";
 import { toast } from "sonner";
 
 const Navbar = () => {
@@ -77,6 +79,7 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-3">
               {user ? (
                 <div className="flex items-center space-x-3">
+                  <NavbarNotifications />
                   <span className="text-sm font-medium text-gray-700">
                     Witaj, {user.email?.split('@')[0]}!
                   </span>
