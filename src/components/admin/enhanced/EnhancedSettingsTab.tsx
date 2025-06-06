@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { toast } from 'sonner';
 import { Save, Upload, Palette, Globe, Shield, Mail } from 'lucide-react';
+import LogoUploadCard from './LogoUploadCard';
 
 export default function EnhancedSettingsTab() {
   const { settings, updateSetting, loading } = useSiteSettings();
@@ -126,42 +126,20 @@ export default function EnhancedSettingsTab() {
         </TabsContent>
 
         <TabsContent value="branding" className="space-y-6">
+          {/* Logo Upload Card */}
+          <LogoUploadCard 
+            currentLogo={settings.logo_url}
+            onLogoChange={(url) => handleSaveSetting('logo_url', url)}
+          />
+          
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Palette className="h-5 w-5" />
-                Logo i kolory
+                Kolory i wygląd
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="logo-url">URL Logo</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="logo-url"
-                    value={settings.logo_url}
-                    onChange={(e) => handleSaveSetting('logo_url', e.target.value)}
-                    placeholder="https://example.com/logo.png"
-                  />
-                  <Button variant="outline" size="icon">
-                    <Upload className="h-4 w-4" />
-                  </Button>
-                </div>
-                {settings.logo_url && (
-                  <div className="mt-2">
-                    <img 
-                      src={settings.logo_url} 
-                      alt="Logo preview" 
-                      className="h-16 w-16 object-contain border rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = '';
-                        e.currentTarget.alt = 'Błąd ładowania logo';
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="primary-color">Kolor główny</Label>

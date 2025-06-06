@@ -1,44 +1,42 @@
 
 import React, { useState } from 'react';
-import AdminGuard from '@/components/admin/AdminGuard';
+import { useAuth } from '@/hooks/useAuth';
 import EnhancedAdminLayout from '@/components/admin/enhanced/EnhancedAdminLayout';
+import EnhancedAnalyticsTab from '@/components/admin/enhanced/EnhancedAnalyticsTab';
 import LiveAnalyticsTab from '@/components/admin/enhanced/LiveAnalyticsTab';
-import ModerationTab from '@/components/admin/enhanced/ModerationTab';
-import ActivityLogsTab from '@/components/admin/enhanced/ActivityLogsTab';
-import EnhancedSettingsTab from '@/components/admin/enhanced/EnhancedSettingsTab';
-
-// Import existing components
 import UsersTab from '@/components/admin/UsersTab';
 import ContentTab from '@/components/admin/ContentTab';
-import StatusBadge from '@/components/admin/StatusBadge';
+import ModerationTab from '@/components/admin/enhanced/ModerationTab';
 import DatingPanel from '@/components/admin/DatingPanel';
 import MarketPanel from '@/components/admin/MarketPanel';
 import GazettePanel from '@/components/admin/GazettePanel';
-
-// Import mock data
-import { mockUsers, mockContent } from '@/components/admin/mockData';
+import NotificationsTab from '@/components/admin/NotificationsTab';
+import ActivityLogsTab from '@/components/admin/enhanced/ActivityLogsTab';
+import EnhancedSettingsTab from '@/components/admin/enhanced/EnhancedSettingsTab';
 
 const EnhancedAdminPanelPage = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('analytics');
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Dostęp zabroniony</h1>
+          <p className="text-gray-600">Musisz się zalogować, aby uzyskać dostęp do panelu administratora.</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'analytics':
-        return <LiveAnalyticsTab />;
+        return <EnhancedAnalyticsTab />;
       case 'users':
-        return (
-          <UsersTab 
-            users={mockUsers} 
-            getStatusBadge={(status: string) => <StatusBadge status={status} />}
-          />
-        );
+        return <UsersTab />;
       case 'content':
-        return (
-          <ContentTab 
-            content={mockContent} 
-            getStatusBadge={(status: string) => <StatusBadge status={status} />} 
-          />
-        );
+        return <ContentTab />;
       case 'moderation':
         return <ModerationTab />;
       case 'dating':
@@ -48,27 +46,20 @@ const EnhancedAdminPanelPage = () => {
       case 'gazette':
         return <GazettePanel />;
       case 'ads':
-        return (
-          <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Zarządzanie reklamami</h1>
-            <p className="text-muted-foreground">Panel zarządzania reklamami będzie dostępny wkrótce.</p>
-          </div>
-        );
+        return <NotificationsTab />;
       case 'activity':
         return <ActivityLogsTab />;
       case 'settings':
         return <EnhancedSettingsTab />;
       default:
-        return <LiveAnalyticsTab />;
+        return <EnhancedAnalyticsTab />;
     }
   };
 
   return (
-    <AdminGuard requireAdmin={true}>
-      <EnhancedAdminLayout activeTab={activeTab} onTabChange={setActiveTab}>
-        {renderTabContent()}
-      </EnhancedAdminLayout>
-    </AdminGuard>
+    <EnhancedAdminLayout activeTab={activeTab} onTabChange={setActiveTab}>
+      {renderTabContent()}
+    </EnhancedAdminLayout>
   );
 };
 

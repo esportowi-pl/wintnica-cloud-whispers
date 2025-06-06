@@ -1,201 +1,132 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Star, Shield, Users, BarChart } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import ContentSlider from '@/components/content/ContentSlider';
+import Navbar from '@/components/layout/Navbar';
+import SkyHeader from '@/components/layout/SkyHeader';
+import Footer from '@/components/layout/Footer';
+import NewsSection from '@/components/news/NewsSection';
+import WeatherWidget from '@/components/weather/WeatherWidget';
+import WeatherAPI from '@/components/weather/WeatherAPI';
+import CityStatsWidget from '@/components/home/CityStatsWidget';
+import RecentClassifieds from '@/components/home/RecentClassifieds';
+import RecommendedUsers from '@/components/home/RecommendedUsers';
+import LocalMap from '@/components/maps/LocalMap';
 import ActivityFeed from '@/components/social/ActivityFeed';
-import MainLayout from '@/components/layout/MainLayout';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin } from "lucide-react";
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
-  const navigate = useNavigate();
-
   return (
-    <MainLayout>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary/80 to-primary py-20">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <motion.div 
-              className="lg:w-1/2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                Witnica.info - Twoja społeczność online
-              </h1>
-              <p className="mt-6 text-white/90 text-xl">
-                Twórz, publikuj i zarabiaj w jednym miejscu. Dołącz do społeczności lokalnych twórców i mieszkańców.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button 
-                  size="lg" 
-                  onClick={() => navigate('/register')}
-                  className="bg-white text-primary hover:bg-white/90"
-                >
-                  Dołącz teraz <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  onClick={() => navigate('/content')}
-                  className="border-white text-white hover:bg-white hover:text-primary"
-                >
-                  Przeglądaj treści
-                </Button>
-              </div>
-            </motion.div>
-            <motion.div 
-              className="lg:w-1/2"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className="bg-white rounded-xl shadow-xl p-6">
-                <img 
-                  src="/placeholder.svg" 
-                  alt="Witnica.info platforma" 
-                  className="w-full h-64 object-cover rounded-lg" 
-                />
-              </div>
-            </motion.div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <SkyHeader />
+      
+      <main className="flex-grow container mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">Witaj w Witnicy!</h1>
+          <p className="text-xl text-gray-600 mb-8">Twoje lokalne centrum społecznościowe</p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            <Link to="/dating">
+              <Button className="w-full h-20 flex flex-col gap-2">
+                <Heart className="h-6 w-6" />
+                <span className="text-sm">Randki</span>
+              </Button>
+            </Link>
+            <Link to="/chat">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <MessageCircle className="h-6 w-6" />
+                <span className="text-sm">Chat</span>
+              </Button>
+            </Link>
+            <Link to="/events">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <Calendar className="h-6 w-6" />
+                <span className="text-sm">Wydarzenia</span>
+              </Button>
+            </Link>
+            <Link to="/rynek">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <ShoppingBag className="h-6 w-6" />
+                <span className="text-sm">Rynek</span>
+              </Button>
+            </Link>
           </div>
         </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold">Dlaczego Witnica.info?</h2>
-            <p className="mt-4 text-muted-foreground text-lg max-w-2xl mx-auto">
-              Nasza platforma łączy lokalną społeczność, informacje i możliwości zarabiania w jednym miejscu.
-            </p>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Aktualności */}
+            <NewsSection />
+            
+            {/* Mapa lokalna */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Mapa Witnicy
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <LocalMap />
+              </CardContent>
+            </Card>
+            
+            {/* Feed aktywności */}
+            <ActivityFeed />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard 
-              icon={<Star className="h-8 w-8 text-primary" />}
-              title="Wysokiej jakości treści"
-              description="Sprawdzone informacje i atrakcyjne treści przygotowane przez lokalnych autorów."
-            />
-            <FeatureCard 
-              icon={<Shield className="h-8 w-8 text-primary" />}
-              title="Bezpieczeństwo"
-              description="Chronimy Twoje dane i zapewniamy bezpieczne środowisko dla całej społeczności."
-            />
-            <FeatureCard 
-              icon={<Users className="h-8 w-8 text-primary" />}
-              title="Społeczność"
-              description="Łączymy mieszkańców Witnicy i okolic, tworząc lokalną sieć wsparcia."
-            />
-            <FeatureCard 
-              icon={<BarChart className="h-8 w-8 text-primary" />}
-              title="Zarabiaj"
-              description="Twórz wartościowe treści i zarabiaj dzięki naszemu systemowi shardsów."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Content Slider */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">Najnowsze artykuły</h2>
-          <ContentSlider />
-        </div>
-      </section>
-
-      {/* Activity Feed */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="lg:w-2/3">
-              <h2 className="text-3xl font-bold mb-8">Co się dzieje w Witnicy?</h2>
-              <ActivityFeed />
-            </div>
-            <div className="lg:w-1/3 mt-8 lg:mt-0">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Dołącz do Premium</CardTitle>
-                  <CardDescription>
-                    Odblokuj wszystkie możliwości platformy
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-center">
-                      <div className="bg-primary/20 p-1 rounded-full mr-2">
-                        <Check className="h-4 w-4 text-primary" />
-                      </div>
-                      Nieograniczony dostęp do treści
-                    </li>
-                    <li className="flex items-center">
-                      <div className="bg-primary/20 p-1 rounded-full mr-2">
-                        <Check className="h-4 w-4 text-primary" />
-                      </div>
-                      Monetyzacja własnych publikacji
-                    </li>
-                    <li className="flex items-center">
-                      <div className="bg-primary/20 p-1 rounded-full mr-2">
-                        <Check className="h-4 w-4 text-primary" />
-                      </div>
-                      Szablony treści i grafik
-                    </li>
-                    <li className="flex items-center">
-                      <div className="bg-primary/20 p-1 rounded-full mr-2">
-                        <Check className="h-4 w-4 text-primary" />
-                      </div>
-                      Analityka czytelnictwa
-                    </li>
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" onClick={() => navigate('/premium')}>
-                    Rozpocznij za 19.99zł/mies
+          {/* Right Sidebar */}
+          <div className="space-y-6">
+            {/* Pogoda */}
+            <WeatherAPI />
+            
+            {/* Statystyki miasta */}
+            <CityStatsWidget />
+            
+            {/* Najnowsze ogłoszenia */}
+            <RecentClassifieds />
+            
+            {/* Polecani użytkownicy */}
+            <RecommendedUsers />
+            
+            {/* Quick Links */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Szybkie linki</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Link to="/groups">
+                  <Button variant="ghost" className="w-full justify-start">
+                    <Users className="h-4 w-4 mr-2" />
+                    Grupy lokalne
                   </Button>
-                </CardFooter>
-              </Card>
-            </div>
+                </Link>
+                <Link to="/gazeta">
+                  <Button variant="ghost" className="w-full justify-start">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Gazeta miejska
+                  </Button>
+                </Link>
+                <Link to="/premium">
+                  <Button variant="ghost" className="w-full justify-start">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Premium
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </section>
-    </MainLayout>
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
-
-// Feature Card component
-const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => {
-  return (
-    <Card className="transition-all duration-300 hover:shadow-md">
-      <CardHeader>
-        <div className="mb-4">{icon}</div>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
-  );
-};
-
-// Missing Check icon import
-const Check = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M20 6L9 17L4 12" />
-  </svg>
-);
 
 export default HomePage;
