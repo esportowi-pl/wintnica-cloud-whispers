@@ -1,6 +1,20 @@
 
-import React from 'react';
-import { Search, Wifi, Volume2, Battery, Calendar, Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Search, 
+  Wifi, 
+  Volume2, 
+  Battery, 
+  Calendar,
+  MessageSquare,
+  Heart,
+  ShoppingBag,
+  Newspaper,
+  Users,
+  Settings,
+  Power,
+  User
+} from 'lucide-react';
 import { WindowState } from './types';
 
 interface TaskBarProps {
@@ -18,114 +32,230 @@ const TaskBar: React.FC<TaskBarProps> = ({
   onRestoreWindow,
   onOpenApp
 }) => {
-  const quickApps = [
-    { id: 'file-explorer', name: 'Eksploruj', icon: '📁' },
-    { id: 'browser', name: 'Przeglądarka', icon: '🌐' },
-    { id: 'chat', name: 'Chat', icon: '💬' },
-    { id: 'dating', name: 'Randki', icon: '❤️' },
-    { id: 'marketplace', name: 'Rynek', icon: '🛒' }
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [showSystemTray, setShowSystemTray] = useState(false);
+  const [notifications, setNotifications] = useState(3);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const pinnedApps = [
+    { 
+      id: 'chat', 
+      name: 'Chat', 
+      icon: <MessageSquare className="w-5 h-5" />,
+      component: <div className="p-4">Chat aplikacja - W budowie</div>
+    },
+    { 
+      id: 'dating', 
+      name: 'Portal Randkowy', 
+      icon: <Heart className="w-5 h-5" />,
+      component: <div className="p-4">Portal randkowy - W budowie</div>
+    },
+    { 
+      id: 'marketplace', 
+      name: 'Marketplace', 
+      icon: <ShoppingBag className="w-5 h-5" />,
+      component: <div className="p-4">Marketplace - W budowie</div>
+    },
+    { 
+      id: 'news', 
+      name: 'Gazeta', 
+      icon: <Newspaper className="w-5 h-5" />,
+      component: <div className="p-4">Gazeta miejska - W budowie</div>
+    },
+    { 
+      id: 'groups', 
+      name: 'Grupy', 
+      icon: <Users className="w-5 h-5" />,
+      component: <div className="p-4">Grupy lokalne - W budowie</div>
+    },
   ];
 
-  const currentTime = new Date().toLocaleTimeString('pl-PL', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
-  
-  const currentDate = new Date().toLocaleDateString('pl-PL', { 
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric'
-  });
+  const openPinnedApp = (app: any) => {
+    const existingWindow = windows.find(w => w.appId === app.id);
+    if (existingWindow) {
+      onRestoreWindow(existingWindow.id);
+    } else {
+      onOpenApp(app.id, app.name, app.component);
+    }
+  };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-12 bg-black/80 backdrop-blur-md border-t border-white/20 flex items-center justify-between px-2 z-50">
+    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gray-900/95 backdrop-blur-md border-t border-white/20 flex items-center px-2 z-40">
       {/* Start Button */}
-      <button 
-        className="flex items-center justify-center w-10 h-8 rounded hover:bg-white/20 transition-colors"
+      <button
         onClick={onToggleStart}
+        className="flex items-center space-x-2 px-4 py-2 hover:bg-white/10 rounded transition-colors"
       >
-        <div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded-sm flex items-center justify-center">
+        <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded flex items-center justify-center">
           <span className="text-white text-xs font-bold">W</span>
         </div>
+        <span className="text-white text-sm font-medium hidden sm:block">Start</span>
       </button>
 
       {/* Search */}
-      <div className="flex items-center ml-2">
-        <div className="flex items-center bg-white/20 rounded-full px-3 py-1 w-60">
-          <Search className="w-4 h-4 text-white/70 mr-2" />
-          <input 
-            type="text" 
-            placeholder="Wpisz, aby wyszukać"
-            className="bg-transparent text-white text-sm outline-none flex-1 placeholder-white/50"
+      <div className="hidden md:flex items-center space-x-2 ml-2">
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Szukaj w Witnicy..."
+            className="bg-gray-800 text-white pl-8 pr-4 py-1 rounded text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      {/* Task View */}
-      <button 
-        className="ml-2 w-8 h-8 rounded hover:bg-white/20 transition-colors flex items-center justify-center"
-        title="Widok zadań"
-      >
-        <div className="w-4 h-4 border border-white/70 rounded-sm"></div>
-      </button>
-
-      {/* Widgets */}
-      <button 
-        className="ml-1 w-8 h-8 rounded hover:bg-white/20 transition-colors flex items-center justify-center"
-        onClick={onToggleWidgets}
-        title="Widżety"
-      >
-        <div className="w-4 h-4 bg-white/70 rounded-sm"></div>
-      </button>
-
-      {/* Quick Apps */}
-      <div className="flex items-center ml-4 space-x-1">
-        {quickApps.map(app => (
-          <button
-            key={app.id}
-            className="w-10 h-8 rounded hover:bg-white/20 transition-colors flex items-center justify-center"
-            onClick={() => onOpenApp(app.id, app.name, <div>Zawartość aplikacji {app.name}</div>)}
-            title={app.name}
-          >
-            <span className="text-lg">{app.icon}</span>
-          </button>
-        ))}
+      {/* Pinned Apps */}
+      <div className="flex items-center space-x-1 ml-4">
+        {pinnedApps.map(app => {
+          const isOpen = windows.some(w => w.appId === app.id && !w.isMinimized);
+          return (
+            <button
+              key={app.id}
+              onClick={() => openPinnedApp(app)}
+              className={`p-2 rounded transition-colors ${
+                isOpen 
+                  ? 'bg-blue-600/50 text-blue-200' 
+                  : 'hover:bg-white/10 text-gray-300'
+              }`}
+              title={app.name}
+            >
+              {app.icon}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Running Apps */}
-      <div className="flex items-center ml-4 space-x-1">
-        {windows.map(window => (
+      {/* Separator */}
+      <div className="w-px h-6 bg-white/20 mx-2" />
+
+      {/* Open Windows */}
+      <div className="flex items-center space-x-1 flex-1">
+        {windows.filter(w => !w.isMinimized).map(window => (
           <button
             key={window.id}
-            className={`px-3 h-8 rounded text-white text-xs transition-colors ${
-              window.isMinimized 
-                ? 'bg-white/20 hover:bg-white/30' 
-                : 'bg-white/40 hover:bg-white/50'
-            }`}
             onClick={() => onRestoreWindow(window.id)}
+            className="flex items-center space-x-2 px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-white text-sm max-w-48 truncate"
           >
-            {window.title}
+            <div className="w-4 h-4 bg-blue-500 rounded-sm flex items-center justify-center">
+              <span className="text-white text-xs">📱</span>
+            </div>
+            <span className="truncate">{window.title}</span>
           </button>
         ))}
       </div>
 
-      {/* System Tray */}
-      <div className="flex items-center ml-auto space-x-2 text-white">
-        <div className="flex items-center space-x-1">
-          <Wifi className="w-4 h-4" />
-          <Volume2 className="w-4 h-4" />
-          <Battery className="w-4 h-4" />
+      {/* Widgets Button */}
+      <button
+        onClick={onToggleWidgets}
+        className="p-2 hover:bg-white/10 rounded transition-colors mr-2"
+        title="Widżety"
+      >
+        <div className="w-5 h-5 grid grid-cols-2 gap-0.5">
+          <div className="bg-blue-400 rounded-sm"></div>
+          <div className="bg-green-400 rounded-sm"></div>
+          <div className="bg-yellow-400 rounded-sm"></div>
+          <div className="bg-red-400 rounded-sm"></div>
         </div>
-        
-        <div className="text-right text-xs leading-tight">
-          <div>{currentTime}</div>
-          <div className="text-white/70">{currentDate}</div>
-        </div>
+      </button>
 
-        <button className="w-8 h-8 rounded hover:bg-white/20 transition-colors flex items-center justify-center">
-          <div className="w-4 h-4 border border-white rounded-sm"></div>
+      {/* System Tray */}
+      <div className="flex items-center space-x-2 text-gray-300">
+        {/* Notifications */}
+        {notifications > 0 && (
+          <button className="relative p-1 hover:bg-white/10 rounded">
+            <div className="w-2 h-2 bg-red-500 rounded-full absolute -top-0.5 -right-0.5"></div>
+            <MessageSquare className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* System Icons */}
+        <Wifi className="w-4 h-4" />
+        <Volume2 className="w-4 h-4" />
+        <Battery className="w-4 h-4" />
+
+        {/* Date and Time */}
+        <button
+          onClick={() => setShowSystemTray(!showSystemTray)}
+          className="text-right hover:bg-white/10 rounded px-2 py-1"
+        >
+          <div className="text-xs font-medium">
+            {currentTime.toLocaleTimeString('pl-PL', { 
+              hour: '2-digit', 
+              minute: '2-digit' 
+            })}
+          </div>
+          <div className="text-xs text-gray-400">
+            {currentTime.toLocaleDateString('pl-PL', { 
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            })}
+          </div>
         </button>
+
+        {/* Show Desktop Button */}
+        <button
+          onClick={() => {
+            // Minimize all windows
+            windows.forEach(window => {
+              if (!window.isMinimized) {
+                onRestoreWindow(window.id);
+              }
+            });
+          }}
+          className="w-2 h-8 hover:bg-white/20 border-l border-white/20 ml-2"
+          title="Pokaż pulpit"
+        />
       </div>
+
+      {/* System Tray Popup */}
+      {showSystemTray && (
+        <div className="absolute bottom-12 right-4 w-80 bg-gray-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 p-4">
+          <div className="space-y-4">
+            <div className="text-white">
+              <h3 className="font-medium mb-2">Centrum akcji</h3>
+              <div className="space-y-2">
+                <div className="bg-blue-600 p-3 rounded">
+                  <div className="text-sm">Nowa wiadomość w chat</div>
+                  <div className="text-xs text-blue-200">2 minuty temu</div>
+                </div>
+                <div className="bg-green-600 p-3 rounded">
+                  <div className="text-sm">Nowe wydarzenie w kalendarzu</div>
+                  <div className="text-xs text-green-200">5 minut temu</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="border-t border-white/20 pt-4">
+              <div className="grid grid-cols-4 gap-2">
+                <button className="p-2 bg-gray-800 rounded hover:bg-gray-700">
+                  <Wifi className="w-4 h-4 mx-auto text-white" />
+                  <div className="text-xs text-white mt-1">WiFi</div>
+                </button>
+                <button className="p-2 bg-gray-800 rounded hover:bg-gray-700">
+                  <Volume2 className="w-4 h-4 mx-auto text-white" />
+                  <div className="text-xs text-white mt-1">Dźwięk</div>
+                </button>
+                <button className="p-2 bg-gray-800 rounded hover:bg-gray-700">
+                  <Settings className="w-4 h-4 mx-auto text-white" />
+                  <div className="text-xs text-white mt-1">Ustawienia</div>
+                </button>
+                <button className="p-2 bg-gray-800 rounded hover:bg-gray-700">
+                  <Power className="w-4 h-4 mx-auto text-white" />
+                  <div className="text-xs text-white mt-1">Zasilanie</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
