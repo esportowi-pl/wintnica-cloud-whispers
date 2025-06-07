@@ -13,7 +13,7 @@ import LocalMap from '@/components/maps/LocalMap';
 import ActivityFeed from '@/components/social/ActivityFeed';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin } from "lucide-react";
+import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin, Monitor } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
@@ -27,6 +27,16 @@ const HomePage = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Witaj w Witnicy!</h1>
           <p className="text-xl text-gray-600 mb-8">Twoje lokalne centrum społecznościowe</p>
+          
+          {/* Desktop Mode Button */}
+          <div className="mb-6">
+            <Link to="/desktop">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                <Monitor className="h-5 w-5 mr-2" />
+                Przejdź do trybu Desktop
+              </Button>
+            </Link>
+          </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
             <Link to="/dating">

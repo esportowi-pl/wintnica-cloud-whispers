@@ -29,75 +29,77 @@ const EnhancedAdminPanelPage = () => {
     );
   }
 
-  // Mock data for components that require props
+  // Mock data that matches TypeScript interfaces
   const mockUsers = [
     {
-      id: '1',
+      id: 1,
       username: 'jan_kowalski',
       email: 'jan@witnica.pl',
-      display_name: 'Jan Kowalski',
-      created_at: '2024-01-01T00:00:00Z',
-      last_login: '2024-01-08T10:00:00Z',
-      status: 'active' as const,
-      role: 'user' as const
+      role: 'user',
+      status: 'active',
+      joined: '2024-01-01',
+      lastActive: '2024-01-08',
+      verified: true,
+      posts: 23,
+      premium: false
     },
     {
-      id: '2',
+      id: 2,
       username: 'anna_nowak',
       email: 'anna@witnica.pl',
-      display_name: 'Anna Nowak',
-      created_at: '2024-01-02T00:00:00Z',
-      last_login: '2024-01-08T09:30:00Z',
-      status: 'active' as const,
-      role: 'moderator' as const
+      role: 'moderator',
+      status: 'active',
+      joined: '2024-01-02',
+      lastActive: '2024-01-08',
+      verified: true,
+      posts: 45,
+      premium: true
     }
   ];
 
   const mockContent = [
     {
-      id: '1',
+      id: 1,
       title: 'Nowy park w centrum Witnicy',
       author: 'Jan Kowalski',
-      status: 'published' as const,
-      created_at: '2024-01-08T08:00:00Z',
-      updated_at: '2024-01-08T08:00:00Z',
-      type: 'article' as const,
+      status: 'published',
+      date: '2024-01-08',
       views: 156,
-      likes: 23
+      likes: 23,
+      comments: 5
     },
     {
-      id: '2',
+      id: 2,
       title: 'Festyn miejski już w weekend',
       author: 'Anna Nowak',
-      status: 'draft' as const,
-      created_at: '2024-01-08T09:00:00Z',
-      updated_at: '2024-01-08T09:00:00Z',
-      type: 'event' as const,
+      status: 'draft',
+      date: '2024-01-08',
       views: 89,
-      likes: 12
+      likes: 12,
+      comments: 3
     }
   ];
 
   const mockNotifications = [
     {
-      id: '1',
-      type: 'info' as const,
+      id: 1,
       message: 'Nowy użytkownik zarejestrował się w systemie',
       time: '5 minut temu',
+      type: 'info',
       read: false
     },
     {
-      id: '2',
-      type: 'warning' as const,
+      id: 2,
       message: 'Zgłoszono nieodpowiednią treść w komentarzach',
       time: '15 minut temu',
+      type: 'warning',
       read: false
     },
     {
-      id: '3',
-      type: 'success' as const,
+      id: 3,
       message: 'Backup bazy danych wykonany pomyślnie',
       time: '1 godzinę temu',
+      type: 'success',
       read: true
     }
   ];
