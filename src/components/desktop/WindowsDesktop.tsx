@@ -13,6 +13,14 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 
+// Import all the new applications
+import WitWord from './apps/WitWord';
+import WitSheets from './apps/WitSheets';
+import WitPaint from './apps/WitPaint';
+import WitCode from './apps/WitCode';
+import WitGames from './apps/WitGames';
+import WitMail from './apps/WitMail';
+
 const WindowsDesktop = () => {
   const [windows, setWindows] = useState<WindowState[]>([]);
   const [showStartMenu, setShowStartMenu] = useState(false);
@@ -80,11 +88,43 @@ const WindowsDesktop = () => {
   }, [wallpaperMode, currentWallpaper, wallpapers]);
 
   const openWindow = (appId: string, title: string, component: React.ReactNode, initialSize = { width: 800, height: 600 }) => {
+    // Check if this is one of our new applications and render the proper component
+    let appComponent = component;
+    
+    switch (appId) {
+      case 'witword':
+        appComponent = <WitWord />;
+        initialSize = { width: 1000, height: 700 };
+        break;
+      case 'witsheets':
+        appComponent = <WitSheets />;
+        initialSize = { width: 1200, height: 800 };
+        break;
+      case 'witpaint':
+        appComponent = <WitPaint />;
+        initialSize = { width: 1000, height: 700 };
+        break;
+      case 'witcode':
+        appComponent = <WitCode />;
+        initialSize = { width: 1200, height: 800 };
+        break;
+      case 'witgames':
+        appComponent = <WitGames />;
+        initialSize = { width: 800, height: 600 };
+        break;
+      case 'witmail':
+        appComponent = <WitMail />;
+        initialSize = { width: 1000, height: 700 };
+        break;
+      default:
+        appComponent = component;
+    }
+
     const newWindow: WindowState = {
       id: Date.now().toString(),
       appId,
       title,
-      component,
+      component: appComponent,
       isMinimized: false,
       isMaximized: false,
       position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },

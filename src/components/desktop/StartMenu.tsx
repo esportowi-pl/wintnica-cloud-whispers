@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Search, 
@@ -21,7 +20,19 @@ import {
   TrendingUp,
   Coffee,
   Star,
-  ChevronRight
+  ChevronRight,
+  Brush,
+  Code,
+  Mail,
+  Gamepad2,
+  Sheet,
+  Presentation,
+  StickyNote,
+  Camera,
+  MicIcon,
+  Database,
+  Wifi,
+  PlayCircle
 } from 'lucide-react';
 
 interface StartMenuProps {
@@ -38,10 +49,51 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
       title: 'Polecane',
       icon: <Star className="w-4 h-4" />,
       apps: [
-        { id: 'chat', name: 'Chat Witnicy', icon: <MessageSquare className="w-6 h-6" />, category: 'social' },
-        { id: 'dating', name: 'Portal Randkowy', icon: <Heart className="w-6 h-6" />, category: 'social' },
-        { id: 'marketplace', name: 'Marketplace', icon: <ShoppingBag className="w-6 h-6" />, category: 'shopping' },
-        { id: 'events', name: 'Wydarzenia', icon: <Calendar className="w-6 h-6" />, category: 'social' },
+        { id: 'witword', name: 'WitWord', icon: <FileText className="w-6 h-6" />, category: 'office' },
+        { id: 'witpaint', name: 'WitPaint', icon: <Brush className="w-6 h-6" />, category: 'graphics' },
+        { id: 'witcode', name: 'WitCode', icon: <Code className="w-6 h-6" />, category: 'developer' },
+        { id: 'witgames', name: 'WitGames', icon: <Gamepad2 className="w-6 h-6" />, category: 'entertainment' },
+      ]
+    },
+    office: {
+      title: 'Pakiet Office',
+      icon: <FileText className="w-4 h-4" />,
+      apps: [
+        { id: 'witword', name: 'WitWord', icon: <FileText className="w-6 h-6" />, category: 'office' },
+        { id: 'witsheets', name: 'WitSheets', icon: <Sheet className="w-6 h-6" />, category: 'office' },
+        { id: 'witslides', name: 'WitSlides', icon: <Presentation className="w-6 h-6" />, category: 'office' },
+        { id: 'witmail', name: 'WitMail', icon: <Mail className="w-6 h-6" />, category: 'office' },
+        { id: 'witnotes', name: 'WitNotes', icon: <StickyNote className="w-6 h-6" />, category: 'office' },
+      ]
+    },
+    graphics: {
+      title: 'Grafika i multimedia',
+      icon: <Image className="w-4 h-4" />,
+      apps: [
+        { id: 'witpaint', name: 'WitPaint', icon: <Brush className="w-6 h-6" />, category: 'graphics' },
+        { id: 'witphotoshop', name: 'WitPhotoShop', icon: <Camera className="w-6 h-6" />, category: 'graphics' },
+        { id: 'witcad', name: 'WitCAD', icon: <Image className="w-6 h-6" />, category: 'graphics' },
+        { id: 'witvideo', name: 'WitVideo', icon: <Video className="w-6 h-6" />, category: 'graphics' },
+        { id: 'witaudio', name: 'WitAudio', icon: <MicIcon className="w-6 h-6" />, category: 'graphics' },
+      ]
+    },
+    developer: {
+      title: 'Narzędzia programisty',
+      icon: <Code className="w-4 h-4" />,
+      apps: [
+        { id: 'witcode', name: 'WitCode IDE', icon: <Code className="w-6 h-6" />, category: 'developer' },
+        { id: 'witdb', name: 'WitDB Manager', icon: <Database className="w-6 h-6" />, category: 'developer' },
+        { id: 'witftp', name: 'WitFTP Client', icon: <Wifi className="w-6 h-6" />, category: 'developer' },
+      ]
+    },
+    entertainment: {
+      title: 'Rozrywka',
+      icon: <Music className="w-4 h-4" />,
+      apps: [
+        { id: 'witgames', name: 'WitGames Arcade', icon: <Gamepad2 className="w-6 h-6" />, category: 'entertainment' },
+        { id: 'witstream', name: 'WitStream Player', icon: <PlayCircle className="w-6 h-6" />, category: 'entertainment' },
+        { id: 'music', name: 'Muzyka', icon: <Music className="w-6 h-6" />, category: 'entertainment' },
+        { id: 'photos', name: 'Zdjęcia', icon: <Image className="w-6 h-6" />, category: 'entertainment' },
       ]
     },
     social: {
@@ -52,26 +104,6 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
         { id: 'dating', name: 'Portal Randkowy', icon: <Heart className="w-6 h-6" />, category: 'social' },
         { id: 'groups', name: 'Grupy Lokalne', icon: <Users className="w-6 h-6" />, category: 'social' },
         { id: 'events', name: 'Wydarzenia', icon: <Calendar className="w-6 h-6" />, category: 'social' },
-      ]
-    },
-    productivity: {
-      title: 'Produktywność',
-      icon: <FileText className="w-4 h-4" />,
-      apps: [
-        { id: 'notepad', name: 'Notatnik', icon: <FileText className="w-6 h-6" />, category: 'productivity' },
-        { id: 'calculator', name: 'Kalkulator', icon: <Calculator className="w-6 h-6" />, category: 'productivity' },
-        { id: 'files', name: 'Pliki', icon: <Folder className="w-6 h-6" />, category: 'productivity' },
-        { id: 'settings', name: 'Ustawienia', icon: <Settings className="w-6 h-6" />, category: 'productivity' },
-      ]
-    },
-    entertainment: {
-      title: 'Rozrywka',
-      icon: <Music className="w-4 h-4" />,
-      apps: [
-        { id: 'music', name: 'Muzyka', icon: <Music className="w-6 h-6" />, category: 'entertainment' },
-        { id: 'photos', name: 'Zdjęcia', icon: <Image className="w-6 h-6" />, category: 'entertainment' },
-        { id: 'videos', name: 'Filmy', icon: <Video className="w-6 h-6" />, category: 'entertainment' },
-        { id: 'games', name: 'Gry', icon: <Coffee className="w-6 h-6" />, category: 'entertainment' },
       ]
     },
     local: {
@@ -99,6 +131,30 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
 
   const openApp = (appId: string, appName: string) => {
     const components: { [key: string]: React.ReactNode } = {
+      // Office Suite
+      witword: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitWord</h2><p>Zaawansowany edytor tekstu ładuje się...</p></div>,
+      witsheets: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitSheets</h2><p>Arkusz kalkulacyjny ładuje się...</p></div>,
+      witslides: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitSlides</h2><p>Edytor prezentacji ładuje się...</p></div>,
+      witmail: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitMail</h2><p>Klient poczty ładuje się...</p></div>,
+      witnotes: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitNotes</h2><p>Notatnik ładuje się...</p></div>,
+      
+      // Graphics & Multimedia
+      witpaint: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitPaint</h2><p>Edytor graficzny ładuje się...</p></div>,
+      witphotoshop: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitPhotoShop</h2><p>Zaawansowany edytor zdjęć ładuje się...</p></div>,
+      witcad: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitCAD</h2><p>Narzędzie CAD ładuje się...</p></div>,
+      witvideo: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitVideo</h2><p>Edytor filmów ładuje się...</p></div>,
+      witaudio: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitAudio</h2><p>Studio audio ładuje się...</p></div>,
+      
+      // Developer Tools
+      witcode: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitCode IDE</h2><p>Środowisko programistyczne ładuje się...</p></div>,
+      witdb: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitDB Manager</h2><p>Menedżer baz danych ładuje się...</p></div>,
+      witftp: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitFTP Client</h2><p>Klient FTP ładuje się...</p></div>,
+      
+      // Entertainment
+      witgames: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitGames Arcade</h2><p>Centrum gier ładuje się...</p></div>,
+      witstream: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitStream Player</h2><p>Odtwarzacz multimedialny ładuje się...</p></div>,
+      
+      // Existing apps
       chat: <div className="p-6"><h2 className="text-xl font-bold mb-4">Chat Witnicy</h2><p>Funkcja chat w budowie...</p></div>,
       dating: <div className="p-6"><h2 className="text-xl font-bold mb-4">Portal Randkowy</h2><p>Portal randkowy w budowie...</p></div>,
       marketplace: <div className="p-6"><h2 className="text-xl font-bold mb-4">Marketplace</h2><p>Marketplace w budowie...</p></div>,
