@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Save, Plus, Trash2, Calculator, BarChart3, Download } from 'lucide-react';
 
@@ -8,7 +7,7 @@ interface Cell {
   style?: {
     backgroundColor?: string;
     fontWeight?: string;
-    textAlign?: string;
+    textAlign?: 'left' | 'center' | 'right' | 'justify';
   };
 }
 

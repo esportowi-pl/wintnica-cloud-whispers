@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import TaskBar from './TaskBar';
 import DesktopWindow from './DesktopWindow';
@@ -13,13 +12,16 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 
-// Import all the new applications
+// Import all the applications
 import WitWord from './apps/WitWord';
 import WitSheets from './apps/WitSheets';
 import WitPaint from './apps/WitPaint';
 import WitCode from './apps/WitCode';
 import WitGames from './apps/WitGames';
 import WitMail from './apps/WitMail';
+import WitPhotoShop from './apps/WitPhotoShop';
+import WitSlides from './apps/WitSlides';
+import WitNotes from './apps/WitNotes';
 
 const WindowsDesktop = () => {
   const [windows, setWindows] = useState<WindowState[]>([]);
@@ -88,7 +90,7 @@ const WindowsDesktop = () => {
   }, [wallpaperMode, currentWallpaper, wallpapers]);
 
   const openWindow = (appId: string, title: string, component: React.ReactNode, initialSize = { width: 800, height: 600 }) => {
-    // Check if this is one of our new applications and render the proper component
+    // Check if this is one of our applications and render the proper component
     let appComponent = component;
     
     switch (appId) {
@@ -100,13 +102,25 @@ const WindowsDesktop = () => {
         appComponent = <WitSheets />;
         initialSize = { width: 1200, height: 800 };
         break;
+      case 'witslides':
+        appComponent = <WitSlides />;
+        initialSize = { width: 1200, height: 800 };
+        break;
       case 'witpaint':
         appComponent = <WitPaint />;
         initialSize = { width: 1000, height: 700 };
         break;
+      case 'witphotoshop':
+        appComponent = <WitPhotoShop />;
+        initialSize = { width: 1400, height: 900 };
+        break;
       case 'witcode':
         appComponent = <WitCode />;
         initialSize = { width: 1200, height: 800 };
+        break;
+      case 'witnotes':
+        appComponent = <WitNotes />;
+        initialSize = { width: 1100, height: 750 };
         break;
       case 'witgames':
         appComponent = <WitGames />;

@@ -52,7 +52,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
         { id: 'witword', name: 'WitWord', icon: <FileText className="w-6 h-6" />, category: 'office' },
         { id: 'witpaint', name: 'WitPaint', icon: <Brush className="w-6 h-6" />, category: 'graphics' },
         { id: 'witcode', name: 'WitCode', icon: <Code className="w-6 h-6" />, category: 'developer' },
-        { id: 'witgames', name: 'WitGames', icon: <Gamepad2 className="w-6 h-6" />, category: 'entertainment' },
+        { id: 'witphotoshop', name: 'WitPhotoShop', icon: <Camera className="w-6 h-6" />, category: 'graphics' },
       ]
     },
     office: {
@@ -124,33 +124,33 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
     : [];
 
   const recentApps = [
-    { id: 'chat', name: 'Chat Witnicy', icon: <MessageSquare className="w-5 h-5" /> },
-    { id: 'dating', name: 'Portal Randkowy', icon: <Heart className="w-5 h-5" /> },
-    { id: 'marketplace', name: 'Marketplace', icon: <ShoppingBag className="w-5 h-5" /> },
+    { id: 'witword', name: 'WitWord', icon: <FileText className="w-5 h-5" /> },
+    { id: 'witphotoshop', name: 'WitPhotoShop', icon: <Camera className="w-5 h-5" /> },
+    { id: 'witnotes', name: 'WitNotes', icon: <StickyNote className="w-5 h-5" /> },
   ];
 
   const openApp = (appId: string, appName: string) => {
     const components: { [key: string]: React.ReactNode } = {
-      // Office Suite
+      // Office Suite - these are now real components
       witword: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitWord</h2><p>Zaawansowany edytor tekstu ładuje się...</p></div>,
       witsheets: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitSheets</h2><p>Arkusz kalkulacyjny ładuje się...</p></div>,
       witslides: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitSlides</h2><p>Edytor prezentacji ładuje się...</p></div>,
       witmail: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitMail</h2><p>Klient poczty ładuje się...</p></div>,
       witnotes: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitNotes</h2><p>Notatnik ładuje się...</p></div>,
       
-      // Graphics & Multimedia
+      // Graphics & Multimedia - these are now real components
       witpaint: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitPaint</h2><p>Edytor graficzny ładuje się...</p></div>,
       witphotoshop: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitPhotoShop</h2><p>Zaawansowany edytor zdjęć ładuje się...</p></div>,
       witcad: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitCAD</h2><p>Narzędzie CAD ładuje się...</p></div>,
       witvideo: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitVideo</h2><p>Edytor filmów ładuje się...</p></div>,
       witaudio: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitAudio</h2><p>Studio audio ładuje się...</p></div>,
       
-      // Developer Tools
+      // Developer Tools - these are now real components
       witcode: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitCode IDE</h2><p>Środowisko programistyczne ładuje się...</p></div>,
       witdb: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitDB Manager</h2><p>Menedżer baz danych ładuje się...</p></div>,
       witftp: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitFTP Client</h2><p>Klient FTP ładuje się...</p></div>,
       
-      // Entertainment
+      // Entertainment - these are now real components
       witgames: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitGames Arcade</h2><p>Centrum gier ładuje się...</p></div>,
       witstream: <div className="p-6"><h2 className="text-xl font-bold mb-4">WitStream Player</h2><p>Odtwarzacz multimedialny ładuje się...</p></div>,
       
@@ -186,7 +186,7 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
         className="absolute bottom-12 left-4 w-96 bg-gray-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* Header with user info and search */}
         <div className="p-4 border-b border-white/20">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
@@ -206,7 +206,6 @@ const StartMenu: React.FC<StartMenuProps> = ({ onClose, onOpenApp }) => {
             </button>
           </div>
 
-          {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
