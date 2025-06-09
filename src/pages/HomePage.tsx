@@ -25,7 +25,7 @@ const HomePage = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Witaj w Witnicy!</h1>
+          <h1 className="text-4xl font-bold mb-4">Witaj w Witnica.info!</h1>
           <p className="text-xl text-gray-600 mb-8">Twoje lokalne centrum społecznościowe</p>
           
           {/* Desktop Mode Button */}
@@ -38,8 +38,8 @@ const HomePage = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-            <Link to="/dating">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <Link to="/randki">
               <Button className="w-full h-20 flex flex-col gap-2">
                 <Heart className="h-6 w-6" />
                 <span className="text-sm">Randki</span>
@@ -51,7 +51,7 @@ const HomePage = () => {
                 <span className="text-sm">Chat</span>
               </Button>
             </Link>
-            <Link to="/events">
+            <Link to="/wydarzenia">
               <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
                 <Calendar className="h-6 w-6" />
                 <span className="text-sm">Wydarzenia</span>
@@ -61,6 +61,30 @@ const HomePage = () => {
               <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
                 <ShoppingBag className="h-6 w-6" />
                 <span className="text-sm">Rynek</span>
+              </Button>
+            </Link>
+            <Link to="/galeria">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <Camera className="h-6 w-6" />
+                <span className="text-sm">Galeria</span>
+              </Button>
+            </Link>
+            <Link to="/rekreacja">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <Gamepad2 className="h-6 w-6" />
+                <span className="text-sm">Rekreacja</span>
+              </Button>
+            </Link>
+            <Link to="/browar">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <Coffee className="h-6 w-6" />
+                <span className="text-sm">Browar</span>
+              </Button>
+            </Link>
+            <Link to="/grupy">
+              <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
+                <Users className="h-6 w-6" />
+                <span className="text-sm">Grupy</span>
               </Button>
             </Link>
           </div>

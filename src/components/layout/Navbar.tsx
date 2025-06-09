@@ -15,7 +15,11 @@ import {
   Newspaper,
   User,
   LogOut,
-  LogIn
+  LogIn,
+  Camera,
+  MapPin,
+  Coffee,
+  Gamepad2
 } from 'lucide-react';
 import { useAuth } from "@/hooks/useAuth";
 import AuthModal from "@/components/auth/AuthModal";
@@ -35,11 +39,15 @@ const Navbar = () => {
   const navigation = [
     { name: 'Główna', href: '/', icon: Home },
     { name: 'Chat', href: '/chat', icon: MessageSquare },
-    { name: 'Randki', href: '/dating', icon: Heart, badge: 'HOT' },
+    { name: 'Randki', href: '/randki', icon: Heart, badge: 'HOT' },
     { name: 'Rynek', href: '/rynek', icon: ShoppingBag },
-    { name: 'Wydarzenia', href: '/events', icon: Calendar },
-    { name: 'Grupy', href: '/groups', icon: Users },
+    { name: 'Wydarzenia', href: '/wydarzenia', icon: Calendar },
+    { name: 'Grupy', href: '/grupy', icon: Users },
     { name: 'Gazeta', href: '/gazeta', icon: Newspaper },
+    { name: 'Galeria', href: '/galeria', icon: Camera },
+    { name: 'Rekreacja', href: '/rekreacja', icon: Gamepad2 },
+    { name: 'Browar', href: '/browar', icon: Coffee },
+    { name: 'Mapa', href: '/mapa', icon: MapPin }
   ];
 
   return (
@@ -50,18 +58,18 @@ const Navbar = () => {
             <div className="flex items-center">
               <Link to="/" className="flex-shrink-0">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Witnicy
+                  Witnica.info
                 </h1>
               </Link>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1">
-              {navigation.map((item) => (
+            <div className="hidden lg:flex items-center space-x-1 overflow-x-auto">
+              {navigation.slice(0, 8).map((item) => (
                 <Link key={item.name} to={item.href}>
                   <Button 
                     variant="ghost" 
-                    className="relative flex items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    className="relative flex items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-blue-50 hover:text-blue-600 transition-colors whitespace-nowrap"
                   >
                     <item.icon className="h-4 w-4" />
                     {item.name}
@@ -121,7 +129,7 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t z-40">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 max-h-[80vh] overflow-y-auto">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
