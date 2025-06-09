@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -22,6 +23,11 @@ import GazettePage from './pages/GazettePage';
 import RekreacjaPage from './pages/RekreacjaPage';
 import BrowarPage from './pages/BrowarPage';
 import GaleriaPage from './pages/GaleriaPage';
+import TvPage from './pages/TvPage';
+import LivePage from './pages/LivePage';
+import GamingPage from './pages/GamingPage';
+import StrumykiPage from './pages/StrumykiPage';
+import SzeptyPage from './pages/SzeptyPage';
 
 // Providers
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -104,6 +110,13 @@ function App() {
               <Route path="/rekreacja" element={<RekreacjaPage />} />
               <Route path="/browar" element={<BrowarPage />} />
               <Route path="/galeria" element={<GaleriaPage />} />
+              
+              {/* New social features */}
+              <Route path="/tv" element={<TvPage />} />
+              <Route path="/live" element={<LivePage />} />
+              <Route path="/gaming" element={<GamingPage />} />
+              <Route path="/strumyki" element={<StrumykiPage />} />
+              <Route path="/szepty" element={<SzeptyPage />} />
               
               {/* Additional routes */}
               <Route path="/aktualnosci" element={<HomePage />} />

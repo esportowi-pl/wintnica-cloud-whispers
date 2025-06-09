@@ -13,7 +13,7 @@ import LocalMap from '@/components/maps/LocalMap';
 import ActivityFeed from '@/components/social/ActivityFeed';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin, Monitor } from "lucide-react";
+import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin, Monitor, Camera, Coffee } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
@@ -71,7 +71,7 @@ const HomePage = () => {
             </Link>
             <Link to="/rekreacja">
               <Button className="w-full h-20 flex flex-col gap-2" variant="outline">
-                <Gamepad2 className="h-6 w-6" />
+                <Users className="h-6 w-6" />
                 <span className="text-sm">Rekreacja</span>
               </Button>
             </Link>

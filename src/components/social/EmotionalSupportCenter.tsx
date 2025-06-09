@@ -193,7 +193,7 @@ const EmotionalSupportCenter = () => {
                               <div key={response.id} className="bg-muted/50 p-3 rounded-lg">
                                 <p className="text-sm">{response.content}</p>
                                 <div className="flex items-center gap-2 mt-2">
-                                  <Button variant="ghost" size="xs" className="flex items-center gap-1">
+                                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
                                     <ThumbsUp className="h-3 w-3" />
                                     Pomocne
                                   </Button>

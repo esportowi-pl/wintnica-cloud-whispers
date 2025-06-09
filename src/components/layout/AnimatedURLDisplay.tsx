@@ -11,19 +11,28 @@ const AnimatedURLDisplay = () => {
     const routes = {
       '/': 'Strona główna',
       '/dating': 'Randki',
+      '/randki': 'Randki',
       '/rynek': 'Rynek',
       '/rekreacja': 'Rekreacja',
       '/browar': 'Browar',
       '/chat': 'Chat',
       '/groups': 'Grupy',
+      '/grupy': 'Grupy',
       '/aktualnosci': 'Aktualności',
       '/classifieds': 'Ogłoszenia',
+      '/ogloszenia': 'Ogłoszenia',
       '/events': 'Wydarzenia',
+      '/wydarzenia': 'Wydarzenia',
       '/galeria': 'Galeria',
       '/gazeta': 'Gazeta',
       '/pogoda': 'Pogoda',
       '/mapa': 'Mapa',
-      '/desktop': 'Desktop'
+      '/desktop': 'Desktop',
+      '/tv': 'TV',
+      '/live': 'Live',
+      '/gaming': 'Gaming',
+      '/strumyki': 'Strumyki',
+      '/szepty': 'Szepty'
     };
     return routes[pathname as keyof typeof routes] || 'Witnica.info';
   };
