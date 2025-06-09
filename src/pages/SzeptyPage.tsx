@@ -150,7 +150,7 @@ const SzeptyPage = () => {
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span>{secret.timeAgo}</span>
                             {secret.verified && (
-                              <ShieldCheck className="h-4 w-4 text-green-500" title="Zweryfikowane przez moderatorów" />
+                              <ShieldCheck className="h-4 w-4 text-green-500" />
                             )}
                           </div>
                         </div>
