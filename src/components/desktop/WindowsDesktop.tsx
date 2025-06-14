@@ -1,16 +1,16 @@
-
 import React from 'react';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
 import WidgetPanel from './WidgetPanel';
 import WallpaperSelector from './WallpaperSelector';
 import DesktopContextMenu from './DesktopContextMenu';
-import DesktopIcons from './components/DesktopIcons';
+import EnhancedDesktopIcons from './components/EnhancedDesktopIcons';
 import DesktopWindows from './components/DesktopWindows';
+import WidgetManager from './WidgetManager';
 import { WindowState } from './types';
 import { useDesktopState } from './hooks/useDesktopState';
 import { useWallpaperState } from './hooks/useWallpaperState';
-import { useDesktopIcons } from './hooks/useDesktopIcons';
+import { useAdvancedDesktopIcons } from './hooks/useAdvancedDesktopIcons';
 import { createAppComponent } from './utils/appFactory';
 import {
   ContextMenu,
@@ -47,11 +47,14 @@ const WindowsDesktop = () => {
 
   const {
     desktopIcons,
+    selectedIcons,
     draggedIcon,
+    isEditMode,
     handleIconMouseDown,
+    handleIconSelect,
     createDesktopShortcut,
-    deleteDesktopIcon
-  } = useDesktopIcons();
+    toggleEditMode
+  } = useAdvancedDesktopIcons();
 
   const handleIconDoubleClick = (iconId: string) => {
     switch (iconId) {
@@ -64,8 +67,19 @@ const WindowsDesktop = () => {
       case 'recycle-bin':
         openWindow('recycle', 'Kosz');
         break;
+      case 'widget-manager':
+        openWindow('widget-manager', 'Menedżer Widgetów', <WidgetManager />);
+        break;
       default:
         openWindow(iconId, getAppTitle(iconId));
+    }
+  };
+
+  const handleDeleteIcon = (iconId: string) => {
+    const icon = desktopIcons.find(i => i.id === iconId);
+    if (icon && icon.isEditable) {
+      // Remove icon logic here
+      console.log('Deleting icon:', iconId);
     }
   };
 
@@ -112,7 +126,21 @@ const WindowsDesktop = () => {
   const handleDesktopClick = () => {
     setShowStartMenu(false);
     setShowWidgets(false);
+    if (isEditMode && selectedIcons.length > 0) {
+      handleIconSelect('', false);
+    }
   };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'F2' && !isEditMode) {
+      toggleEditMode();
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isEditMode]);
 
   return (
     <ContextMenu>
@@ -127,16 +155,33 @@ const WindowsDesktop = () => {
           }}
           onClick={handleDesktopClick}
         >
-          <DesktopIcons
+          <EnhancedDesktopIcons
             icons={desktopIcons}
+            selectedIcons={selectedIcons}
             draggedIcon={draggedIcon}
+            isEditMode={isEditMode}
             onIconMouseDown={handleIconMouseDown}
+            onIconSelect={handleIconSelect}
             onIconDoubleClick={handleIconDoubleClick}
+            onDeleteIcon={handleDeleteIcon}
+            onCreateShortcut={createDesktopShortcut}
           />
 
           {wallpaperMode === 'slideshow' && (
             <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
               📺 Pokaz slajdów aktywny
+            </div>
+          )}
+
+          {isEditMode && (
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded-lg z-50 flex items-center gap-4">
+              <span className="text-sm font-medium">🔧 Tryb edycji aktywny</span>
+              <button 
+                onClick={toggleEditMode}
+                className="text-xs bg-white/20 px-2 py-1 rounded"
+              >
+                ESC aby wyjść
+              </button>
             </div>
           )}
 
@@ -188,6 +233,8 @@ const WindowsDesktop = () => {
           onToggleWallpaperMode={toggleWallpaperMode}
           wallpaperMode={wallpaperMode}
           onRefresh={() => window.location.reload()}
+          onToggleEditMode={toggleEditMode}
+          isEditMode={isEditMode}
         />
       </ContextMenuContent>
     </ContextMenu>
