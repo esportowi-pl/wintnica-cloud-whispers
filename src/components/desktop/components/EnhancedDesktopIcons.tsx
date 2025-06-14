@@ -47,6 +47,7 @@ const EnhancedDesktopIcons: React.FC<EnhancedDesktopIconsProps> = ({
         <ContextMenu key={icon.id}>
           <ContextMenuTrigger asChild>
             <div
+              data-desktop-icon
               className={`absolute flex flex-col items-center text-white cursor-pointer p-2 rounded select-none transition-all duration-200 ${
                 draggedIcon === icon.id ? 'scale-110 shadow-2xl z-50' : 
                 selectedIcons.includes(icon.id) ? 'bg-blue-500/30 border-2 border-blue-300' :

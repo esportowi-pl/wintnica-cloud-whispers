@@ -130,11 +130,17 @@ export const useAdvancedDesktopIcons = () => {
     }
   };
 
-  const deleteSelectedIcons = () => {
-    setDesktopIcons(prev => prev.filter(icon => 
-      !selectedIcons.includes(icon.id) || icon.isSystem
-    ));
-    setSelectedIcons([]);
+  const handleIconDoubleClick = (iconId: string) => {
+    // This will be handled by parent component
+    console.log('Double click on icon:', iconId);
+  };
+
+  const handleDeleteIcon = (iconId: string) => {
+    const icon = desktopIcons.find(i => i.id === iconId);
+    if (icon && icon.isEditable) {
+      setDesktopIcons(prev => prev.filter(i => i.id !== iconId));
+      setSelectedIcons(prev => prev.filter(id => id !== iconId));
+    }
   };
 
   const createDesktopShortcut = (name: string, icon: string, type: 'app' | 'widget' = 'app') => {
@@ -162,30 +168,6 @@ export const useAdvancedDesktopIcons = () => {
     setDesktopFolders(prev => [...prev, newFolder]);
   };
 
-  const addIconToFolder = (iconId: string, folderId: string) => {
-    const icon = desktopIcons.find(i => i.id === iconId);
-    if (!icon || icon.isSystem) return;
-
-    setDesktopFolders(prev => prev.map(folder =>
-      folder.id === folderId 
-        ? { ...folder, icons: [...folder.icons, iconId] }
-        : folder
-    ));
-    
-    setDesktopIcons(prev => prev.filter(icon => icon.id !== iconId));
-  };
-
-  const removeIconFromFolder = (iconId: string, folderId: string) => {
-    const folder = desktopFolders.find(f => f.id === folderId);
-    if (!folder) return;
-
-    setDesktopFolders(prev => prev.map(f =>
-      f.id === folderId 
-        ? { ...f, icons: f.icons.filter(id => id !== iconId) }
-        : f
-    ));
-  };
-
   const toggleEditMode = () => {
     setIsEditMode(prev => !prev);
     setSelectedIcons([]);
@@ -193,13 +175,18 @@ export const useAdvancedDesktopIcons = () => {
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Delete' && selectedIcons.length > 0) {
-      deleteSelectedIcons();
+      selectedIcons.forEach(iconId => {
+        const icon = desktopIcons.find(i => i.id === iconId);
+        if (icon && icon.isEditable) {
+          handleDeleteIcon(iconId);
+        }
+      });
     }
     if (e.key === 'Escape') {
       setSelectedIcons([]);
       setIsEditMode(false);
     }
-  }, [selectedIcons]);
+  }, [selectedIcons, desktopIcons]);
 
   useEffect(() => {
     if (isEditMode) {
@@ -216,11 +203,10 @@ export const useAdvancedDesktopIcons = () => {
     isEditMode,
     handleIconMouseDown,
     handleIconSelect,
+    handleIconDoubleClick,
+    handleDeleteIcon,
     createDesktopShortcut,
     createFolder,
-    addIconToFolder,
-    removeIconFromFolder,
-    deleteSelectedIcons,
     toggleEditMode,
     setDesktopFolders
   };

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
@@ -52,6 +53,8 @@ const WindowsDesktop = () => {
     isEditMode,
     handleIconMouseDown,
     handleIconSelect,
+    handleIconDoubleClick: iconDoubleClick,
+    handleDeleteIcon,
     createDesktopShortcut,
     toggleEditMode
   } = useAdvancedDesktopIcons();
@@ -72,14 +75,6 @@ const WindowsDesktop = () => {
         break;
       default:
         openWindow(iconId, getAppTitle(iconId));
-    }
-  };
-
-  const handleDeleteIcon = (iconId: string) => {
-    const icon = desktopIcons.find(i => i.id === iconId);
-    if (icon && icon.isEditable) {
-      // Remove icon logic here
-      console.log('Deleting icon:', iconId);
     }
   };
 
@@ -146,6 +141,7 @@ const WindowsDesktop = () => {
     <ContextMenu>
       <ContextMenuTrigger asChild>
         <div 
+          data-desktop
           className="h-screen w-screen overflow-hidden relative transition-all duration-1000 ease-in-out"
           style={{
             backgroundImage: `url(${currentWallpaper})`,

@@ -19,7 +19,8 @@ import {
   Pause,
   Palette,
   Grid3X3,
-  Layers
+  Layers,
+  Edit
 } from 'lucide-react';
 
 interface DesktopContextMenuProps {
@@ -28,6 +29,8 @@ interface DesktopContextMenuProps {
   onToggleWallpaperMode: () => void;
   wallpaperMode: 'static' | 'slideshow';
   onRefresh: () => void;
+  onToggleEditMode: () => void;
+  isEditMode: boolean;
 }
 
 const DesktopContextMenu: React.FC<DesktopContextMenuProps> = ({
@@ -35,10 +38,10 @@ const DesktopContextMenu: React.FC<DesktopContextMenuProps> = ({
   onOpenWallpaperSelector,
   onToggleWallpaperMode,
   wallpaperMode,
-  onRefresh
+  onRefresh,
+  onToggleEditMode,
+  isEditMode
 }) => {
-  const [showNewItemDialog, setShowNewItemDialog] = useState(false);
-
   const quickShortcuts = [
     { name: 'Notatnik', icon: '📝' },
     { name: 'Kalkulator', icon: '🧮' },
@@ -53,6 +56,13 @@ const DesktopContextMenu: React.FC<DesktopContextMenuProps> = ({
       <ContextMenuItem onSelect={() => onRefresh()}>
         <RefreshCw className="w-4 h-4 mr-2" />
         Odśwież pulpit
+      </ContextMenuItem>
+
+      <ContextMenuSeparator />
+
+      <ContextMenuItem onSelect={onToggleEditMode}>
+        <Edit className="w-4 h-4 mr-2" />
+        {isEditMode ? 'Wyłącz tryb edycji' : 'Włącz tryb edycji'}
       </ContextMenuItem>
 
       <ContextMenuSeparator />
@@ -133,7 +143,6 @@ const DesktopContextMenu: React.FC<DesktopContextMenuProps> = ({
         </ContextMenuSubTrigger>
         <ContextMenuSubContent>
           <ContextMenuItem onSelect={() => {
-            // Toggle desktop icons visibility
             const icons = document.querySelectorAll('[data-desktop-icon]');
             icons.forEach(icon => {
               (icon as HTMLElement).style.display = 
