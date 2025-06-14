@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useWindowState } from './useWindowState';
 
@@ -26,14 +25,6 @@ export const useDesktop2State = () => {
   ];
 
   const openApp = (appId: string, title: string) => {
-    // Create a fallback component first
-    const fallbackComponent = (
-      <div className="p-4 text-white">
-        <h2 className="text-xl font-bold mb-4">{title}</h2>
-        <p>Aplikacja {title} jest w trakcie ładowania...</p>
-      </div>
-    );
-
     // Try to import app factory dynamically
     import('../../../utils/appFactory')
       .then(({ createAppComponent }) => {
@@ -51,7 +42,12 @@ export const useDesktop2State = () => {
       })
       .catch(error => {
         console.error('Failed to load app component:', error);
-        // Use fallback component
+        // Create fallback component inline
+        const fallbackComponent = React.createElement('div', { className: 'p-4 text-white' }, 
+          React.createElement('h2', { className: 'text-xl font-bold mb-4' }, title),
+          React.createElement('p', null, `Aplikacja ${title} jest w trakcie ładowania...`)
+        );
+        
         addWindow({
           appId,
           title,
