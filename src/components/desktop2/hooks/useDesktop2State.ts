@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import React from 'react';
 import { useWindowState } from './useWindowState';
 
 export const useDesktop2State = () => {
@@ -26,7 +27,7 @@ export const useDesktop2State = () => {
 
   const openApp = (appId: string, title: string) => {
     // Try to import app factory dynamically
-    import('../../../utils/appFactory')
+    import('../../desktop/utils/appFactory')
       .then(({ createAppComponent }) => {
         const { component: appComponent, size: initialSize } = createAppComponent(appId);
         
