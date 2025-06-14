@@ -1,123 +1,140 @@
 
 import React from 'react';
+import { useDesktop2State } from './hooks/useDesktop2State';
 import TaskBar2 from './TaskBar2';
 import StartMenu2 from './StartMenu2';
 import ActionCenter2 from './ActionCenter2';
 import WidgetPanel2 from './WidgetPanel2';
 import WindowManager2 from './WindowManager2';
 import VirtualDesktops from './VirtualDesktops';
-import FluentWindow from './components/FluentWindow';
-import { useDesktop2State } from './hooks/useDesktop2State';
 import { useFluentDesign } from './hooks/useFluentDesign';
 import { witnicaTheme } from './themes/witnicaTheme';
 
-const Desktop2 = () => {
+const Desktop2: React.FC = () => {
   const {
     windows,
-    showStartMenu,
-    showActionCenter,
-    showWidgets,
+    startMenuOpen,
+    actionCenterOpen,
+    widgetPanelOpen,
     currentDesktop,
-    virtualDesktops,
-    wallpaper,
-    handleOpenApp,
-    handleCloseWindow,
-    handleMinimizeWindow,
-    handleMaximizeWindow,
+    desktops,
+    openApp,
+    closeWindow,
+    minimizeWindow,
+    maximizeWindow,
     toggleStartMenu,
     toggleActionCenter,
-    toggleWidgets,
+    toggleWidgetPanel,
     switchDesktop
   } = useDesktop2State();
 
-  const { glassMorphism, fluentBlur, dynamicLighting } = useFluentDesign();
+  const { glassMorphism, fluentBlur } = useFluentDesign();
+
+  // Dynamic wallpaper with WITNICA theme
+  const getWallpaperStyle = () => {
+    const hour = new Date().getHours();
+    const isDaytime = hour >= 6 && hour < 18;
+    
+    return {
+      background: isDaytime 
+        ? 'linear-gradient(135deg, #0078D4 0%, #6B46C1 50%, #8B5CF6 100%)'
+        : 'linear-gradient(135deg, #1e3a8a 0%, #4c1d95 50%, #581c87 100%)',
+      transition: 'background 1s ease-in-out'
+    };
+  };
 
   return (
     <div 
-      className="h-screen w-screen overflow-hidden relative"
-      style={{
-        background: `linear-gradient(135deg, ${witnicaTheme.colors.primary}, ${witnicaTheme.colors.secondary})`,
-        backgroundImage: wallpaper ? `url(${wallpaper})` : undefined,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        ...dynamicLighting
-      }}
+      className="relative w-full h-screen overflow-hidden"
+      style={getWallpaperStyle()}
     >
-      {/* Dynamic Blur Overlay */}
+      {/* Desktop Background Effects */}
+      <div className="absolute inset-0 bg-black/5" />
       <div 
-        className="absolute inset-0 z-0"
-        style={{ 
-          backdropFilter: 'blur(1px) saturate(1.2)',
-          background: 'rgba(11, 18, 42, 0.1)'
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                          radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)`,
         }}
       />
 
       {/* Virtual Desktops Indicator */}
       <VirtualDesktops
-        desktops={virtualDesktops}
+        desktops={desktops}
         currentDesktop={currentDesktop}
         onSwitchDesktop={switchDesktop}
       />
 
-      {/* Window Manager */}
+      {/* Desktop Icons */}
+      <div className="absolute top-8 left-8 grid grid-cols-1 gap-4">
+        {[
+          { name: 'Kosz', icon: '🗑️', id: 'recycle' },
+          { name: 'Mój Komputer', icon: '💻', id: 'computer' },
+          { name: 'Dokumenty', icon: '📁', id: 'documents' },
+          { name: 'WITNICA Portal', icon: '🌐', id: 'portal' }
+        ].map(item => (
+          <button
+            key={item.id}
+            onClick={() => openApp(item.id, item.name)}
+            className="flex flex-col items-center p-3 rounded-lg hover:bg-white/10 transition-all duration-200 group max-w-[80px]"
+          >
+            <div className="text-3xl mb-1 group-hover:scale-110 transition-transform">
+              {item.icon}
+            </div>
+            <span className="text-white text-xs font-medium text-center drop-shadow-lg">
+              {item.name}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Windows */}
       <WindowManager2
         windows={windows}
-        onClose={handleCloseWindow}
-        onMinimize={handleMinimizeWindow}
-        onMaximize={handleMaximizeWindow}
+        onClose={closeWindow}
+        onMinimize={minimizeWindow}
+        onMaximize={maximizeWindow}
       />
 
-      {/* Start Menu 2.0 */}
-      {showStartMenu && (
-        <StartMenu2 
+      {/* Start Menu */}
+      {startMenuOpen && (
+        <StartMenu2
           onClose={toggleStartMenu}
-          onOpenApp={handleOpenApp}
+          onOpenApp={openApp}
           style={glassMorphism}
         />
       )}
 
-      {/* Action Center 2.0 */}
-      {showActionCenter && (
-        <ActionCenter2 
+      {/* Action Center */}
+      {actionCenterOpen && (
+        <ActionCenter2
           onClose={toggleActionCenter}
           style={glassMorphism}
         />
       )}
 
-      {/* Widget Panel 2.0 */}
-      {showWidgets && (
-        <WidgetPanel2 
-          onClose={toggleWidgets}
+      {/* Widget Panel */}
+      {widgetPanelOpen && (
+        <WidgetPanel2
+          onClose={toggleWidgetPanel}
           style={glassMorphism}
         />
       )}
 
-      {/* Cortana WITNICA Assistant */}
-      <div className="absolute top-4 right-4 z-50">
-        <button 
-          className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-          style={fluentBlur}
-        >
-          <span className="text-white text-xl">🤖</span>
-        </button>
-      </div>
-
-      {/* TaskBar 2.0 */}
-      <TaskBar2 
-        windows={windows}
-        onToggleStart={toggleStartMenu}
+      {/* Taskbar */}
+      <TaskBar2
+        onToggleStartMenu={toggleStartMenu}
         onToggleActionCenter={toggleActionCenter}
-        onToggleWidgets={toggleWidgets}
-        onOpenApp={handleOpenApp}
-        style={glassMorphism}
+        onToggleWidgetPanel={toggleWidgetPanel}
+        openWindows={windows}
+        onWindowClick={(windowId) => {
+          // Bring window to front or restore if minimized
+          const window = windows.find(w => w.id === windowId);
+          if (window?.isMinimized) {
+            minimizeWindow(windowId);
+          }
+        }}
       />
-
-      {/* Focus Assist Overlay */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40">
-        <div className="bg-black/20 backdrop-blur-md rounded-full px-4 py-2 text-white text-sm font-medium">
-          🎯 Desktop2 Mode Win20 WITNICA Edition
-        </div>
-      </div>
     </div>
   );
 };
