@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import DesktopPage from './pages/DesktopPage';
+import Desktop2Page from './pages/Desktop2Page';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import UserPanelPage from './pages/UserPanelPage';
@@ -52,6 +52,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/desktop" element={<DesktopPage />} />
+              <Route path="/desktop2" element={<Desktop2Page />} />
               <Route path="/login" element={<AuthPage />} />
               
               {/* Dashboard routes */}
