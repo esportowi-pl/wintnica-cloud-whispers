@@ -26,32 +26,42 @@ export const useDesktop2State = () => {
   ];
 
   const openApp = (appId: string, title: string) => {
-    // Import app factory dynamically
-    import('../../../utils/appFactory').then(({ createAppComponent }) => {
-      const { component: appComponent, size: initialSize } = createAppComponent(appId);
-      
-      addWindow({
-        appId,
-        title,
-        component: appComponent,
-        isMinimized: false,
-        isMaximized: false,
-        position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
-        size: initialSize
+    // Create a fallback component first
+    const fallbackComponent = (
+      <div className="p-4 text-white">
+        <h2 className="text-xl font-bold mb-4">{title}</h2>
+        <p>Aplikacja {title} jest w trakcie ładowania...</p>
+      </div>
+    );
+
+    // Try to import app factory dynamically
+    import('../../../utils/appFactory')
+      .then(({ createAppComponent }) => {
+        const { component: appComponent, size: initialSize } = createAppComponent(appId);
+        
+        addWindow({
+          appId,
+          title,
+          component: appComponent,
+          isMinimized: false,
+          isMaximized: false,
+          position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
+          size: initialSize
+        });
+      })
+      .catch(error => {
+        console.error('Failed to load app component:', error);
+        // Use fallback component
+        addWindow({
+          appId,
+          title,
+          component: fallbackComponent,
+          isMinimized: false,
+          isMaximized: false,
+          position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
+          size: { width: 800, height: 600 }
+        });
       });
-    }).catch(error => {
-      console.error('Failed to load app component:', error);
-      // Fallback component
-      addWindow({
-        appId,
-        title,
-        component: <div className="p-4 text-white">Aplikacja {title}</div>,
-        isMinimized: false,
-        isMaximized: false,
-        position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
-        size: { width: 800, height: 600 }
-      });
-    });
   };
 
   const toggleStartMenu = () => {
