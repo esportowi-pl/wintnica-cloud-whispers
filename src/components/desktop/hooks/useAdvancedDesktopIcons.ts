@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 
 interface DesktopIcon {
@@ -25,6 +24,7 @@ const defaultIcons: DesktopIcon[] = [
   { id: 'wallpapers', name: 'Tapety', icon: '🖼️', x: 50, y: 50, type: 'app', isSystem: true },
   { id: 'recycle-bin', name: 'Kosz', icon: '🗑️', x: 50, y: 150, type: 'app', isSystem: true },
   { id: 'my-computer', name: 'Mój komputer', icon: '💻', x: 50, y: 250, type: 'app', isSystem: true },
+  { id: 'witcommand', name: 'Command Center', icon: '🖥️', x: 50, y: 350, type: 'app', isSystem: true },
   { id: 'witword', name: 'WitWord', icon: '📝', x: 200, y: 50, type: 'app', isEditable: true },
   { id: 'witsheets', name: 'WitSheets', icon: '📊', x: 200, y: 150, type: 'app', isEditable: true },
   { id: 'witpaint', name: 'WitPaint', icon: '🎨', x: 200, y: 250, type: 'app', isEditable: true },

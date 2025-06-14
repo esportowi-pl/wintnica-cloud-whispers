@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TaskBar from './TaskBar';
 import StartMenu from './StartMenu';
@@ -70,6 +69,9 @@ const WindowsDesktop = () => {
       case 'recycle-bin':
         openWindow('recycle', 'Kosz');
         break;
+      case 'witcommand':
+        openWindow('witcommand', 'WITNICA Command Center');
+        break;
       case 'widget-manager':
         openWindow('widget-manager', 'Menedżer Widgetów', <WidgetManager />);
         break;
@@ -92,6 +94,7 @@ const WindowsDesktop = () => {
       witcad: 'WitCAD',
       witvideo: 'WitVideo',
       witaudio: 'WitAudio',
+      witcommand: 'WITNICA Command Center',
       witdb: 'WitDB',
       witftp: 'WitFTP',
       witstream: 'WitStream'

@@ -12,6 +12,7 @@ import WitNotes from '../apps/WitNotes';
 import WitCAD from '../apps/WitCAD';
 import WitVideo from '../apps/WitVideo';
 import WitAudio from '../apps/WitAudio';
+import WitCommandCenter from '../apps/WitCommandCenter';
 
 export const createAppComponent = (appId: string): { component: React.ReactNode; size: { width: number; height: number } } => {
   switch (appId) {
@@ -39,6 +40,8 @@ export const createAppComponent = (appId: string): { component: React.ReactNode;
       return { component: <WitVideo />, size: { width: 1400, height: 900 } };
     case 'witaudio':
       return { component: <WitAudio />, size: { width: 1300, height: 800 } };
+    case 'witcommand':
+      return { component: <WitCommandCenter />, size: { width: 1400, height: 900 } };
     case 'witdb':
       return { 
         component: <div className="p-8 text-center"><h2 className="text-2xl font-bold mb-4">WitDB</h2><p>Menedżer baz danych - W przygotowaniu</p></div>, 
