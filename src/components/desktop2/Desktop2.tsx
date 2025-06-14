@@ -5,10 +5,9 @@ import TaskBar2 from './TaskBar2';
 import StartMenu2 from './StartMenu2';
 import ActionCenter2 from './ActionCenter2';
 import WidgetPanel2 from './WidgetPanel2';
-import WindowManager2 from './WindowManager2';
+import EnhancedWindowManager from './components/EnhancedWindowManager';
 import VirtualDesktops from './VirtualDesktops';
 import { useFluentDesign } from './hooks/useFluentDesign';
-import { witnicaTheme } from './themes/witnicaTheme';
 
 const Desktop2: React.FC = () => {
   const {
@@ -25,10 +24,13 @@ const Desktop2: React.FC = () => {
     toggleStartMenu,
     toggleActionCenter,
     toggleWidgetPanel,
-    switchDesktop
+    switchDesktop,
+    updateWindowPosition,
+    updateWindowSize,
+    bringToFront
   } = useDesktop2State();
 
-  const { glassMorphism, fluentBlur } = useFluentDesign();
+  const { glassMorphism } = useFluentDesign();
 
   // Dynamic wallpaper with WITNICA theme
   const getWallpaperStyle = () => {
@@ -88,12 +90,15 @@ const Desktop2: React.FC = () => {
         ))}
       </div>
 
-      {/* Windows */}
-      <WindowManager2
+      {/* Enhanced Windows with advanced management */}
+      <EnhancedWindowManager
         windows={windows}
         onClose={closeWindow}
         onMinimize={minimizeWindow}
         onMaximize={maximizeWindow}
+        onPositionChange={updateWindowPosition}
+        onSizeChange={updateWindowSize}
+        onBringToFront={bringToFront}
       />
 
       {/* Start Menu */}
@@ -128,10 +133,11 @@ const Desktop2: React.FC = () => {
         onToggleWidgets={toggleWidgetPanel}
         openWindows={windows}
         onWindowClick={(windowId) => {
-          // Bring window to front or restore if minimized
           const window = windows.find(w => w.id === windowId);
           if (window?.isMinimized) {
             minimizeWindow(windowId);
+          } else {
+            bringToFront(windowId);
           }
         }}
       />

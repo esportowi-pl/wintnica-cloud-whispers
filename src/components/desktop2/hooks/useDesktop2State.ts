@@ -1,26 +1,23 @@
 
 import { useState, useEffect } from 'react';
-
-interface WindowState {
-  id: string;
-  appId: string;
-  title: string;
-  component: React.ReactNode;
-  isMinimized: boolean;
-  isMaximized: boolean;
-  position: { x: number; y: number };
-  size: { width: number; height: number };
-  zIndex: number;
-}
+import { useWindowState } from './useWindowState';
 
 export const useDesktop2State = () => {
-  const [windows, setWindows] = useState<WindowState[]>([]);
+  const {
+    windows,
+    updateWindowPosition,
+    updateWindowSize,
+    bringToFront,
+    minimizeWindow,
+    maximizeWindow,
+    closeWindow,
+    addWindow
+  } = useWindowState();
+
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [actionCenterOpen, setActionCenterOpen] = useState(false);
   const [widgetPanelOpen, setWidgetPanelOpen] = useState(false);
   const [currentDesktop, setCurrentDesktop] = useState(0);
-  const [nextZIndex, setNextZIndex] = useState(100);
-  const [wallpaper, setWallpaper] = useState('https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?q=80&w=1920&auto=format&fit=crop');
 
   const desktops = [
     { id: 0, name: 'Główny', windows: [] },
@@ -29,42 +26,32 @@ export const useDesktop2State = () => {
   ];
 
   const openApp = (appId: string, title: string) => {
-    const { createAppComponent } = require('../../../utils/appFactory');
-    const { component: appComponent, size: initialSize } = createAppComponent(appId);
-
-    const newWindow: WindowState = {
-      id: Date.now().toString(),
-      appId,
-      title,
-      component: appComponent,
-      isMinimized: false,
-      isMaximized: false,
-      position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
-      size: initialSize,
-      zIndex: nextZIndex
-    };
-    
-    setWindows(prev => [...prev, newWindow]);
-    setNextZIndex(prev => prev + 1);
-  };
-
-  const closeWindow = (id: string) => {
-    setWindows(prev => prev.filter(window => window.id !== id));
-  };
-
-  const minimizeWindow = (id: string) => {
-    setWindows(prev => prev.map(window => 
-      window.id === id ? { ...window, isMinimized: !window.isMinimized } : window
-    ));
-  };
-
-  const maximizeWindow = (id: string) => {
-    setWindows(prev => prev.map(window => 
-      window.id === id ? { 
-        ...window, 
-        isMaximized: !window.isMaximized
-      } : window
-    ));
+    // Import app factory dynamically
+    import('../../../utils/appFactory').then(({ createAppComponent }) => {
+      const { component: appComponent, size: initialSize } = createAppComponent(appId);
+      
+      addWindow({
+        appId,
+        title,
+        component: appComponent,
+        isMinimized: false,
+        isMaximized: false,
+        position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
+        size: initialSize
+      });
+    }).catch(error => {
+      console.error('Failed to load app component:', error);
+      // Fallback component
+      addWindow({
+        appId,
+        title,
+        component: <div className="p-4 text-white">Aplikacja {title}</div>,
+        isMinimized: false,
+        isMaximized: false,
+        position: { x: 100 + windows.length * 30, y: 100 + windows.length * 30 },
+        size: { width: 800, height: 600 }
+      });
+    });
   };
 
   const toggleStartMenu = () => {
@@ -96,7 +83,6 @@ export const useDesktop2State = () => {
     widgetPanelOpen,
     currentDesktop,
     desktops,
-    wallpaper,
     openApp,
     closeWindow,
     minimizeWindow,
@@ -104,6 +90,9 @@ export const useDesktop2State = () => {
     toggleStartMenu,
     toggleActionCenter,
     toggleWidgetPanel,
-    switchDesktop
+    switchDesktop,
+    updateWindowPosition,
+    updateWindowSize,
+    bringToFront
   };
 };
