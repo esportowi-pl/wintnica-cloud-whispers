@@ -36,7 +36,11 @@ const FluentWindow: React.FC<FluentWindowProps> = ({
         left: 0,
         width: '100vw',
         height: 'calc(100vh - 56px)',
-        zIndex: window.zIndex
+        zIndex: window.zIndex,
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(40px) saturate(1.8)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
       }
     : {
         position: 'absolute' as const,
@@ -44,7 +48,11 @@ const FluentWindow: React.FC<FluentWindowProps> = ({
         top: window.position.y,
         width: window.size.width,
         height: window.size.height,
-        zIndex: window.zIndex
+        zIndex: window.zIndex,
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(40px) saturate(1.8)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
       };
 
   return (
@@ -53,13 +61,6 @@ const FluentWindow: React.FC<FluentWindowProps> = ({
       style={windowStyle}
       className="rounded-2xl shadow-2xl overflow-hidden transition-all duration-300"
       onMouseDown={handleMouseDown}
-      style={{
-        ...windowStyle,
-        background: 'rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(40px) saturate(1.8)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-      }}
     >
       {/* Window Header */}
       <div 
