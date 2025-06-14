@@ -5,7 +5,7 @@ import Footer from '@/components/layout/Footer';
 import { HeroSection } from '@/components/home/redesign/HeroSection';
 import { FeatureGrid } from '@/components/home/redesign/FeatureGrid';
 import { Button } from '@/components/ui/button';
-import { Cube, Layers, Box } from 'lucide-react';
+import { Box, Layers, Package } from 'lucide-react';
 
 const TestHomeV3 = () => {
   return (
@@ -25,7 +25,7 @@ const TestHomeV3 = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="group cursor-pointer">
               <div className="bg-gradient-to-br from-red-600 to-orange-600 p-8 rounded-xl shadow-2xl transform-gpu hover:rotate-y-12 hover:scale-110 transition-all duration-700 preserve-3d">
-                <Cube className="h-16 w-16 text-white mb-4 group-hover:rotate-180 transition-transform duration-700 transform-gpu translate-z-8" />
+                <Box className="h-16 w-16 text-white mb-4 group-hover:rotate-180 transition-transform duration-700 transform-gpu translate-z-8" />
                 <h3 className="text-2xl font-black text-white mb-3 transform-gpu translate-z-4">SOCJAL</h3>
                 <p className="text-orange-100 transform-gpu translate-z-2">Nawiązuj połączenia w trzech wymiarach</p>
               </div>
@@ -41,7 +41,7 @@ const TestHomeV3 = () => {
             
             <div className="group cursor-pointer">
               <div className="bg-gradient-to-br from-green-600 to-teal-600 p-8 rounded-xl shadow-2xl transform-gpu hover:rotate-y-12 hover:scale-110 transition-all duration-700 preserve-3d">
-                <Box className="h-16 w-16 text-white mb-4 group-hover:rotate-180 transition-transform duration-700 transform-gpu translate-z-8" />
+                <Package className="h-16 w-16 text-white mb-4 group-hover:rotate-180 transition-transform duration-700 transform-gpu translate-z-8" />
                 <h3 className="text-2xl font-black text-white mb-3 transform-gpu translate-z-4">KULTURA</h3>
                 <p className="text-green-100 transform-gpu translate-z-2">Przestrzenna eksploracja tradycji</p>
               </div>

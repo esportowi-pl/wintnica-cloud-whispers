@@ -65,7 +65,7 @@ export const useWindowState = () => {
             ...window, 
             isMaximized: true,
             position: { x: 0, y: 0 },
-            size: { width: window.innerWidth || 1920, height: (window.innerHeight || 1080) - 80 }
+            size: { width: globalThis.innerWidth || 1920, height: (globalThis.innerHeight || 1080) - 80 }
           };
         }
       }
