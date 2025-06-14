@@ -3,21 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { Search, Wifi, Volume2, Battery, Calendar, Bell, Settings, Power } from 'lucide-react';
 
 interface TaskBar2Props {
-  windows: any[];
   onToggleStart: () => void;
   onToggleActionCenter: () => void;
   onToggleWidgets: () => void;
-  onOpenApp: (appId: string, title: string) => void;
-  style: any;
+  openWindows: any[];
+  onWindowClick: (windowId: any) => void;
 }
 
 const TaskBar2: React.FC<TaskBar2Props> = ({
-  windows,
+  openWindows,
   onToggleStart,
   onToggleActionCenter,
   onToggleWidgets,
-  onOpenApp,
-  style
+  onWindowClick
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,7 +37,6 @@ const TaskBar2: React.FC<TaskBar2Props> = ({
     <div 
       className="absolute bottom-0 left-0 right-0 h-14 flex items-center justify-between px-4 z-50"
       style={{
-        ...style,
         background: 'rgba(255, 255, 255, 0.1)',
         backdropFilter: 'blur(20px) saturate(1.5)',
         borderTop: '1px solid rgba(255, 255, 255, 0.2)'
@@ -72,11 +69,11 @@ const TaskBar2: React.FC<TaskBar2Props> = ({
       {/* Centered App Icons */}
       <div className="flex items-center space-x-2 flex-1 justify-center">
         {pinnedApps.map(app => {
-          const isOpen = windows.some(w => w.appId === app.id && !w.isMinimized);
+          const isOpen = openWindows.some(w => w.appId === app.id && !w.isMinimized);
           return (
             <button
               key={app.id}
-              onClick={() => onOpenApp(app.id, app.name)}
+              onClick={() => onWindowClick(app.id)}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:bg-white/10 ${
                 isOpen ? 'bg-white/20 scale-110' : ''
               }`}

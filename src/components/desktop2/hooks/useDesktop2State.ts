@@ -15,20 +15,20 @@ interface WindowState {
 
 export const useDesktop2State = () => {
   const [windows, setWindows] = useState<WindowState[]>([]);
-  const [showStartMenu, setShowStartMenu] = useState(false);
-  const [showActionCenter, setShowActionCenter] = useState(false);
-  const [showWidgets, setShowWidgets] = useState(false);
+  const [startMenuOpen, setStartMenuOpen] = useState(false);
+  const [actionCenterOpen, setActionCenterOpen] = useState(false);
+  const [widgetPanelOpen, setWidgetPanelOpen] = useState(false);
   const [currentDesktop, setCurrentDesktop] = useState(0);
   const [nextZIndex, setNextZIndex] = useState(100);
   const [wallpaper, setWallpaper] = useState('https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?q=80&w=1920&auto=format&fit=crop');
 
-  const virtualDesktops = [
+  const desktops = [
     { id: 0, name: 'Główny', windows: [] },
     { id: 1, name: 'Praca', windows: [] },
     { id: 2, name: 'Rozrywka', windows: [] }
   ];
 
-  const handleOpenApp = (appId: string, title: string) => {
+  const openApp = (appId: string, title: string) => {
     const { createAppComponent } = require('../../../utils/appFactory');
     const { component: appComponent, size: initialSize } = createAppComponent(appId);
 
@@ -48,17 +48,17 @@ export const useDesktop2State = () => {
     setNextZIndex(prev => prev + 1);
   };
 
-  const handleCloseWindow = (id: string) => {
+  const closeWindow = (id: string) => {
     setWindows(prev => prev.filter(window => window.id !== id));
   };
 
-  const handleMinimizeWindow = (id: string) => {
+  const minimizeWindow = (id: string) => {
     setWindows(prev => prev.map(window => 
-      window.id === id ? { ...window, isMinimized: true } : window
+      window.id === id ? { ...window, isMinimized: !window.isMinimized } : window
     ));
   };
 
-  const handleMaximizeWindow = (id: string) => {
+  const maximizeWindow = (id: string) => {
     setWindows(prev => prev.map(window => 
       window.id === id ? { 
         ...window, 
@@ -68,21 +68,21 @@ export const useDesktop2State = () => {
   };
 
   const toggleStartMenu = () => {
-    setShowStartMenu(prev => !prev);
-    setShowActionCenter(false);
-    setShowWidgets(false);
+    setStartMenuOpen(prev => !prev);
+    setActionCenterOpen(false);
+    setWidgetPanelOpen(false);
   };
 
   const toggleActionCenter = () => {
-    setShowActionCenter(prev => !prev);
-    setShowStartMenu(false);
-    setShowWidgets(false);
+    setActionCenterOpen(prev => !prev);
+    setStartMenuOpen(false);
+    setWidgetPanelOpen(false);
   };
 
-  const toggleWidgets = () => {
-    setShowWidgets(prev => !prev);
-    setShowStartMenu(false);
-    setShowActionCenter(false);
+  const toggleWidgetPanel = () => {
+    setWidgetPanelOpen(prev => !prev);
+    setStartMenuOpen(false);
+    setActionCenterOpen(false);
   };
 
   const switchDesktop = (index: number) => {
@@ -91,19 +91,19 @@ export const useDesktop2State = () => {
 
   return {
     windows,
-    showStartMenu,
-    showActionCenter,
-    showWidgets,
+    startMenuOpen,
+    actionCenterOpen,
+    widgetPanelOpen,
     currentDesktop,
-    virtualDesktops,
+    desktops,
     wallpaper,
-    handleOpenApp,
-    handleCloseWindow,
-    handleMinimizeWindow,
-    handleMaximizeWindow,
+    openApp,
+    closeWindow,
+    minimizeWindow,
+    maximizeWindow,
     toggleStartMenu,
     toggleActionCenter,
-    toggleWidgets,
+    toggleWidgetPanel,
     switchDesktop
   };
 };

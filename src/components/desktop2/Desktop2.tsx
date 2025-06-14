@@ -123,9 +123,9 @@ const Desktop2: React.FC = () => {
 
       {/* Taskbar */}
       <TaskBar2
-        onToggleStartMenu={toggleStartMenu}
+        onToggleStart={toggleStartMenu}
         onToggleActionCenter={toggleActionCenter}
-        onToggleWidgetPanel={toggleWidgetPanel}
+        onToggleWidgets={toggleWidgetPanel}
         openWindows={windows}
         onWindowClick={(windowId) => {
           // Bring window to front or restore if minimized
