@@ -13,7 +13,7 @@ import LocalMap from '@/components/maps/LocalMap';
 import ActivityFeed from '@/components/social/ActivityFeed';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin, Monitor, Camera, Coffee } from "lucide-react";
+import { Heart, MessageCircle, Calendar, ShoppingBag, Users, MapPin, Monitor, Camera, Coffee, Palette } from "lucide-react";
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
@@ -36,6 +36,36 @@ const HomePage = () => {
                 Przejdź do trybu Desktop
               </Button>
             </Link>
+          </div>
+
+          {/* Test Homepage Variants */}
+          <div className="mb-8 p-4 bg-blue-50 rounded-lg">
+            <h2 className="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
+              <Palette className="h-5 w-5" />
+              Testowe warianty strony głównej
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              <Link to="/test-home-v1">
+                <Button variant="outline" size="sm" className="w-full">
+                  Minimal
+                </Button>
+              </Link>
+              <Link to="/test-home-v2">
+                <Button variant="outline" size="sm" className="w-full">
+                  Glass
+                </Button>
+              </Link>
+              <Link to="/test-home-v3">
+                <Button variant="outline" size="sm" className="w-full">
+                  3D
+                </Button>
+              </Link>
+              <Link to="/test-home-v4">
+                <Button variant="outline" size="sm" className="w-full">
+                  Mobile
+                </Button>
+              </Link>
+            </div>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">

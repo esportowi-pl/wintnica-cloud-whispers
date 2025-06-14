@@ -33,6 +33,12 @@ import Hidden1Page from './pages/Hidden1Page';
 import Hidden2Page from './pages/Hidden2Page';
 import Hidden3Page from './pages/Hidden3Page';
 
+// New test homepage variants
+import TestHomeV1 from './pages/TestHomeV1';
+import TestHomeV2 from './pages/TestHomeV2';
+import TestHomeV3 from './pages/TestHomeV3';
+import TestHomeV4 from './pages/TestHomeV4';
+
 // Providers
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/hooks/useAuth';
@@ -58,6 +64,12 @@ function App() {
               <Route path="/desktop" element={<DesktopPage />} />
               <Route path="/desktop2" element={<Desktop2Page />} />
               <Route path="/login" element={<AuthPage />} />
+              
+              {/* Test Homepage Variants */}
+              <Route path="/test-home-v1" element={<TestHomeV1 />} />
+              <Route path="/test-home-v2" element={<TestHomeV2 />} />
+              <Route path="/test-home-v3" element={<TestHomeV3 />} />
+              <Route path="/test-home-v4" element={<TestHomeV4 />} />
               
               {/* Hidden Pages */}
               <Route path="/hidden1" element={<Hidden1Page />} />

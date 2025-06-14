@@ -1,105 +1,90 @@
 
 import { useState, useCallback } from 'react';
 
-interface WindowPosition {
-  x: number;
-  y: number;
-}
-
-interface WindowSize {
-  width: number;
-  height: number;
-}
-
 export interface WindowState {
   id: string;
   appId: string;
   title: string;
   component: React.ReactNode;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
   isMinimized: boolean;
   isMaximized: boolean;
-  position: WindowPosition;
-  size: WindowSize;
   zIndex: number;
-  isActive: boolean;
 }
 
 export const useWindowState = () => {
   const [windows, setWindows] = useState<WindowState[]>([]);
-  const [nextZIndex, setNextZIndex] = useState(100);
+  const [nextZIndex, setNextZIndex] = useState(1000);
 
-  const updateWindowPosition = useCallback((id: string, position: WindowPosition) => {
+  const addWindow = useCallback((windowData: Omit<WindowState, 'id' | 'zIndex'>) => {
+    const newWindow: WindowState = {
+      ...windowData,
+      id: `window-${Date.now()}-${Math.random()}`,
+      zIndex: nextZIndex,
+    };
+    
+    setWindows(prev => [...prev, newWindow]);
+    setNextZIndex(prev => prev + 1);
+    
+    return newWindow.id;
+  }, [nextZIndex]);
+
+  const updateWindowPosition = useCallback((id: string, position: { x: number; y: number }) => {
     setWindows(prev => prev.map(window => 
       window.id === id ? { ...window, position } : window
     ));
   }, []);
 
-  const updateWindowSize = useCallback((id: string, size: WindowSize) => {
+  const updateWindowSize = useCallback((id: string, size: { width: number; height: number }) => {
     setWindows(prev => prev.map(window => 
       window.id === id ? { ...window, size } : window
     ));
   }, []);
 
   const bringToFront = useCallback((id: string) => {
-    setWindows(prev => {
-      const window = prev.find(w => w.id === id);
-      if (!window) return prev;
-
-      const newZIndex = nextZIndex;
-      setNextZIndex(prev => prev + 1);
-
-      return prev.map(w => ({
-        ...w,
-        zIndex: w.id === id ? newZIndex : w.zIndex,
-        isActive: w.id === id
-      }));
-    });
+    setWindows(prev => prev.map(window => 
+      window.id === id ? { ...window, zIndex: nextZIndex } : window
+    ));
+    setNextZIndex(prev => prev + 1);
   }, [nextZIndex]);
 
   const minimizeWindow = useCallback((id: string) => {
     setWindows(prev => prev.map(window => 
-      window.id === id ? { ...window, isMinimized: !window.isMinimized } : window
+      window.id === id ? { ...window, isMinimized: true } : window
     ));
   }, []);
 
   const maximizeWindow = useCallback((id: string) => {
-    setWindows(prev => prev.map(window => 
-      window.id === id ? { 
-        ...window, 
-        isMaximized: !window.isMaximized,
-        position: window.isMaximized ? window.position : { x: 0, y: 0 },
-        size: window.isMaximized ? window.size : { width: window.innerWidth || 1920, height: (window.innerHeight || 1080) - 56 }
-      } : window
-    ));
+    setWindows(prev => prev.map(window => {
+      if (window.id === id) {
+        if (window.isMaximized) {
+          return { ...window, isMaximized: false };
+        } else {
+          return { 
+            ...window, 
+            isMaximized: true,
+            position: { x: 0, y: 0 },
+            size: { width: window.innerWidth || 1920, height: (window.innerHeight || 1080) - 80 }
+          };
+        }
+      }
+      return window;
+    }));
   }, []);
 
   const closeWindow = useCallback((id: string) => {
     setWindows(prev => prev.filter(window => window.id !== id));
   }, []);
 
-  const addWindow = useCallback((window: Omit<WindowState, 'id' | 'zIndex' | 'isActive'>) => {
-    const id = Date.now().toString();
-    const newWindow: WindowState = {
-      ...window,
-      id,
-      zIndex: nextZIndex,
-      isActive: true
-    };
-    
-    setWindows(prev => [...prev.map(w => ({ ...w, isActive: false })), newWindow]);
-    setNextZIndex(prev => prev + 1);
-    
-    return id;
-  }, [nextZIndex]);
-
   return {
     windows,
+    addWindow,
     updateWindowPosition,
     updateWindowSize,
     bringToFront,
     minimizeWindow,
     maximizeWindow,
     closeWindow,
-    addWindow
   };
 };
