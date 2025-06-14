@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -28,6 +29,9 @@ import LivePage from './pages/LivePage';
 import GamingPage from './pages/GamingPage';
 import StrumykiPage from './pages/StrumykiPage';
 import SzeptyPage from './pages/SzeptyPage';
+import Hidden1Page from './pages/Hidden1Page';
+import Hidden2Page from './pages/Hidden2Page';
+import Hidden3Page from './pages/Hidden3Page';
 
 // Providers
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -54,6 +58,11 @@ function App() {
               <Route path="/desktop" element={<DesktopPage />} />
               <Route path="/desktop2" element={<Desktop2Page />} />
               <Route path="/login" element={<AuthPage />} />
+              
+              {/* Hidden Pages */}
+              <Route path="/hidden1" element={<Hidden1Page />} />
+              <Route path="/hidden2" element={<Hidden2Page />} />
+              <Route path="/hidden3" element={<Hidden3Page />} />
               
               {/* Dashboard routes */}
               <Route path="/dashboard" element={<DashboardPage />} />
