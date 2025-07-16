@@ -7,6 +7,11 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
       admin_activity_logs: {
@@ -96,6 +101,65 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_logs: {
+        Row: {
+          attacker_id: string
+          battle_result: Json
+          created_at: string | null
+          defender_id: string | null
+          id: string
+          territory_id: string | null
+          winner_id: string | null
+        }
+        Insert: {
+          attacker_id: string
+          battle_result: Json
+          created_at?: string | null
+          defender_id?: string | null
+          id?: string
+          territory_id?: string | null
+          winner_id?: string | null
+        }
+        Update: {
+          attacker_id?: string
+          battle_result?: Json
+          created_at?: string | null
+          defender_id?: string | null
+          id?: string
+          territory_id?: string | null
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_logs_attacker_id_fkey"
+            columns: ["attacker_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_logs_defender_id_fkey"
+            columns: ["defender_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_logs_territory_id_fkey"
+            columns: ["territory_id"]
+            isOneToOne: false
+            referencedRelation: "world_territories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_logs_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           created_at: string
@@ -160,6 +224,218 @@ export type Database = {
           type?: string
         }
         Relationships: []
+      }
+      civilization_alliances: {
+        Row: {
+          civilization1_id: string
+          civilization2_id: string
+          created_at: string | null
+          id: string
+          status: string | null
+        }
+        Insert: {
+          civilization1_id: string
+          civilization2_id: string
+          created_at?: string | null
+          id?: string
+          status?: string | null
+        }
+        Update: {
+          civilization1_id?: string
+          civilization2_id?: string
+          created_at?: string | null
+          id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "civilization_alliances_civilization1_id_fkey"
+            columns: ["civilization1_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "civilization_alliances_civilization2_id_fkey"
+            columns: ["civilization2_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      civilization_buildings: {
+        Row: {
+          building_type: string
+          civilization_id: string
+          construction_end: string | null
+          construction_start: string | null
+          created_at: string | null
+          id: string
+          is_completed: boolean | null
+          level: number | null
+          position_x: number | null
+          position_y: number | null
+        }
+        Insert: {
+          building_type: string
+          civilization_id: string
+          construction_end?: string | null
+          construction_start?: string | null
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          level?: number | null
+          position_x?: number | null
+          position_y?: number | null
+        }
+        Update: {
+          building_type?: string
+          civilization_id?: string
+          construction_end?: string | null
+          construction_start?: string | null
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          level?: number | null
+          position_x?: number | null
+          position_y?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "civilization_buildings_civilization_id_fkey"
+            columns: ["civilization_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      civilization_resources: {
+        Row: {
+          civilization_id: string
+          food: number | null
+          gold: number | null
+          id: string
+          iron: number | null
+          stone: number | null
+          updated_at: string | null
+          wood: number | null
+        }
+        Insert: {
+          civilization_id: string
+          food?: number | null
+          gold?: number | null
+          id?: string
+          iron?: number | null
+          stone?: number | null
+          updated_at?: string | null
+          wood?: number | null
+        }
+        Update: {
+          civilization_id?: string
+          food?: number | null
+          gold?: number | null
+          id?: string
+          iron?: number | null
+          stone?: number | null
+          updated_at?: string | null
+          wood?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "civilization_resources_civilization_id_fkey"
+            columns: ["civilization_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      civilization_technologies: {
+        Row: {
+          civilization_id: string
+          created_at: string | null
+          id: string
+          is_completed: boolean | null
+          research_end: string | null
+          research_progress: number | null
+          research_start: string | null
+          technology_name: string
+        }
+        Insert: {
+          civilization_id: string
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          research_end?: string | null
+          research_progress?: number | null
+          research_start?: string | null
+          technology_name: string
+        }
+        Update: {
+          civilization_id?: string
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          research_end?: string | null
+          research_progress?: number | null
+          research_start?: string | null
+          technology_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "civilization_technologies_civilization_id_fkey"
+            columns: ["civilization_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      civilization_units: {
+        Row: {
+          civilization_id: string
+          created_at: string | null
+          experience: number | null
+          health: number | null
+          id: string
+          position_x: number | null
+          position_y: number | null
+          quantity: number | null
+          unit_type: string
+        }
+        Insert: {
+          civilization_id: string
+          created_at?: string | null
+          experience?: number | null
+          health?: number | null
+          id?: string
+          position_x?: number | null
+          position_y?: number | null
+          quantity?: number | null
+          unit_type: string
+        }
+        Update: {
+          civilization_id?: string
+          created_at?: string | null
+          experience?: number | null
+          health?: number | null
+          id?: string
+          position_x?: number | null
+          position_y?: number | null
+          quantity?: number | null
+          unit_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "civilization_units_civilization_id_fkey"
+            columns: ["civilization_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       comments: {
         Row: {
@@ -709,6 +985,83 @@ export type Database = {
           },
         ]
       }
+      player_civilizations: {
+        Row: {
+          civilization_name: string
+          created_at: string | null
+          culture_points: number | null
+          experience: number | null
+          happiness: number | null
+          id: string
+          level: number | null
+          population: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          civilization_name: string
+          created_at?: string | null
+          culture_points?: number | null
+          experience?: number | null
+          happiness?: number | null
+          id?: string
+          level?: number | null
+          population?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          civilization_name?: string
+          created_at?: string | null
+          culture_points?: number | null
+          experience?: number | null
+          happiness?: number | null
+          id?: string
+          level?: number | null
+          population?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      player_inventory: {
+        Row: {
+          civilization_id: string
+          created_at: string | null
+          id: string
+          item_data: Json | null
+          item_name: string
+          item_type: string
+          quantity: number | null
+        }
+        Insert: {
+          civilization_id: string
+          created_at?: string | null
+          id?: string
+          item_data?: Json | null
+          item_name: string
+          item_type: string
+          quantity?: number | null
+        }
+        Update: {
+          civilization_id?: string
+          created_at?: string | null
+          id?: string
+          item_data?: Json | null
+          item_name?: string
+          item_type?: string
+          quantity?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_inventory_civilization_id_fkey"
+            columns: ["civilization_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -938,6 +1291,54 @@ export type Database = {
             columns: ["subscriber_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trade_offers: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          offered_resources: Json
+          receiver_id: string
+          requested_resources: Json
+          sender_id: string
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          offered_resources: Json
+          receiver_id: string
+          requested_resources: Json
+          sender_id: string
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          offered_resources?: Json
+          receiver_id?: string
+          requested_resources?: Json
+          sender_id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trade_offers_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trade_offers_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
             referencedColumns: ["id"]
           },
         ]
@@ -1378,6 +1779,77 @@ export type Database = {
           },
         ]
       }
+      world_events: {
+        Row: {
+          affected_civilizations: string[] | null
+          created_at: string | null
+          event_data: Json
+          event_type: string
+          expires_at: string | null
+          id: string
+          is_global: boolean | null
+        }
+        Insert: {
+          affected_civilizations?: string[] | null
+          created_at?: string | null
+          event_data: Json
+          event_type: string
+          expires_at?: string | null
+          id?: string
+          is_global?: boolean | null
+        }
+        Update: {
+          affected_civilizations?: string[] | null
+          created_at?: string | null
+          event_data?: Json
+          event_type?: string
+          expires_at?: string | null
+          id?: string
+          is_global?: boolean | null
+        }
+        Relationships: []
+      }
+      world_territories: {
+        Row: {
+          created_at: string | null
+          id: string
+          owner_id: string | null
+          position_x: number
+          position_y: number
+          resource_bonus: Json | null
+          territory_name: string
+          territory_type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          owner_id?: string | null
+          position_x: number
+          position_y: number
+          resource_bonus?: Json | null
+          territory_name: string
+          territory_type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          owner_id?: string | null
+          position_x?: number
+          position_y?: number
+          resource_bonus?: Json | null
+          territory_name?: string
+          territory_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "world_territories_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "player_civilizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1397,6 +1869,14 @@ export type Database = {
       claim_daily_reward: {
         Args: { p_user_id: string }
         Returns: Json
+      }
+      create_initial_civilization: {
+        Args: { p_user_id: string; p_civilization_name: string }
+        Returns: string
+      }
+      generate_resources: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       has_role: {
         Args: {
@@ -1442,21 +1922,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -1474,14 +1958,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -1497,14 +1983,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -1520,14 +2008,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -1535,14 +2025,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
