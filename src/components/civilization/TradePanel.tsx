@@ -16,8 +16,8 @@ interface TradeOffer {
   requested_resources: any;
   status: string;
   expires_at: string;
-  sender_civilization?: { civilization_name: string };
-  receiver_civilization?: { civilization_name: string };
+  sender_civilization_name?: string;
+  receiver_civilization_name?: string;
 }
 
 interface TradePanelProps {
@@ -44,18 +44,37 @@ const TradePanel = ({ civilizationId }: TradePanelProps) => {
 
   const fetchTradeOffers = async () => {
     try {
-      const { data, error } = await supabase
+      // Get trade offers first
+      const { data: tradeData, error: tradeError } = await supabase
         .from('trade_offers')
-        .select(`
-          *,
-          sender_civilization:sender_id(civilization_name),
-          receiver_civilization:receiver_id(civilization_name)
-        `)
+        .select('*')
         .or(`sender_id.eq.${civilizationId},receiver_id.eq.${civilizationId}`)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setTradeOffers(data || []);
+      if (tradeError) throw tradeError;
+
+      // Get civilization names separately
+      const civilizationIds = new Set<string>();
+      tradeData?.forEach(trade => {
+        civilizationIds.add(trade.sender_id);
+        civilizationIds.add(trade.receiver_id);
+      });
+
+      const { data: civData, error: civError } = await supabase
+        .from('player_civilizations')
+        .select('id, civilization_name')
+        .in('id', Array.from(civilizationIds));
+
+      if (civError) throw civError;
+
+      // Combine the data
+      const enrichedTrades = tradeData?.map(trade => ({
+        ...trade,
+        sender_civilization_name: civData?.find(c => c.id === trade.sender_id)?.civilization_name,
+        receiver_civilization_name: civData?.find(c => c.id === trade.receiver_id)?.civilization_name,
+      })) || [];
+
+      setTradeOffers(enrichedTrades);
     } catch (error) {
       console.error('Error fetching trade offers:', error);
       toast.error('Błąd podczas ładowania ofert handlowych');
@@ -252,8 +271,8 @@ const TradePanel = ({ civilizationId }: TradePanelProps) => {
                     <div>
                       <p className="font-semibold text-amber-900">
                         {offer.sender_id === civilizationId 
-                          ? `Do: ${offer.receiver_civilization?.civilization_name}`
-                          : `Od: ${offer.sender_civilization?.civilization_name}`
+                          ? `Do: ${offer.receiver_civilization_name}`
+                          : `Od: ${offer.sender_civilization_name}`
                         }
                       </p>
                       <p className="text-sm text-amber-600">Status: {offer.status}</p>

@@ -13,8 +13,8 @@ interface Alliance {
   civilization2_id: string;
   status: string;
   created_at: string;
-  civilization1?: { civilization_name: string };
-  civilization2?: { civilization_name: string };
+  civilization1_name?: string;
+  civilization2_name?: string;
 }
 
 interface AlliancePanelProps {
@@ -29,18 +29,37 @@ const AlliancePanel = ({ civilizationId }: AlliancePanelProps) => {
 
   const fetchAlliances = async () => {
     try {
-      const { data, error } = await supabase
+      // First get alliances
+      const { data: allianceData, error: allianceError } = await supabase
         .from('civilization_alliances')
-        .select(`
-          *,
-          civilization1:civilization1_id(civilization_name),
-          civilization2:civilization2_id(civilization_name)
-        `)
+        .select('*')
         .or(`civilization1_id.eq.${civilizationId},civilization2_id.eq.${civilizationId}`)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setAlliances(data || []);
+      if (allianceError) throw allianceError;
+
+      // Then get civilization names separately
+      const civilizationIds = new Set<string>();
+      allianceData?.forEach(alliance => {
+        civilizationIds.add(alliance.civilization1_id);
+        civilizationIds.add(alliance.civilization2_id);
+      });
+
+      const { data: civData, error: civError } = await supabase
+        .from('player_civilizations')
+        .select('id, civilization_name')
+        .in('id', Array.from(civilizationIds));
+
+      if (civError) throw civError;
+
+      // Combine the data
+      const enrichedAlliances = allianceData?.map(alliance => ({
+        ...alliance,
+        civilization1_name: civData?.find(c => c.id === alliance.civilization1_id)?.civilization_name,
+        civilization2_name: civData?.find(c => c.id === alliance.civilization2_id)?.civilization_name,
+      })) || [];
+
+      setAlliances(enrichedAlliances);
     } catch (error) {
       console.error('Error fetching alliances:', error);
       toast.error('Błąd podczas ładowania sojuszy');
@@ -200,8 +219,8 @@ const AlliancePanel = ({ civilizationId }: AlliancePanelProps) => {
             {alliances.map((alliance) => {
               const isProposer = alliance.civilization1_id === civilizationId;
               const partnerName = isProposer 
-                ? alliance.civilization2?.civilization_name 
-                : alliance.civilization1?.civilization_name;
+                ? alliance.civilization2_name 
+                : alliance.civilization1_name;
               
               return (
                 <Card key={alliance.id} className="bg-white/80 border-amber-300">
@@ -261,7 +280,7 @@ const AlliancePanel = ({ civilizationId }: AlliancePanelProps) => {
                             size="sm"
                             variant="destructive"
                           >
-                            Zerwijf sojusz
+                            Zerwij sojusz
                           </Button>
                         )}
                       </div>

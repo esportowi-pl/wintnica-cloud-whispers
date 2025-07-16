@@ -14,7 +14,7 @@ interface Message {
   message: string;
   user_id: string;
   created_at: string;
-  profiles?: { username: string };
+  username?: string;
 }
 
 const ChatPanel = () => {
@@ -63,18 +63,35 @@ const ChatPanel = () => {
 
   const fetchMessages = async (roomId: string) => {
     try {
-      const { data, error } = await supabase
+      // Get messages first
+      const { data: messageData, error: messageError } = await supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles(username)
-        `)
+        .select('*')
         .eq('room_id', roomId)
         .order('created_at', { ascending: true })
         .limit(50);
 
-      if (error) throw error;
-      setMessages(data || []);
+      if (messageError) throw messageError;
+
+      // Get user profiles separately
+      const userIds = messageData?.map(msg => msg.user_id).filter(Boolean) || [];
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, username')
+        .in('id', userIds);
+
+      // Don't throw error if profiles don't exist, just log it
+      if (profileError) {
+        console.warn('Could not fetch profiles:', profileError);
+      }
+
+      // Combine data
+      const enrichedMessages = messageData?.map(msg => ({
+        ...msg,
+        username: profileData?.find(p => p.id === msg.user_id)?.username || 'Gracz'
+      })) || [];
+
+      setMessages(enrichedMessages);
     } catch (error) {
       console.error('Error fetching messages:', error);
       toast.error('Błąd podczas ładowania wiadomości');
@@ -146,7 +163,7 @@ const ChatPanel = () => {
 
         const newMessage = {
           ...payload.new,
-          profiles: profile
+          username: profile?.username || 'Gracz'
         } as Message;
 
         setMessages(prev => [...prev, newMessage]);
@@ -178,7 +195,7 @@ const ChatPanel = () => {
             {messages.map((message) => (
               <div key={message.id} className="text-sm">
                 <span className="font-semibold text-amber-900">
-                  {message.profiles?.username || 'Gracz'}:
+                  {message.username}:
                 </span>
                 <span className="ml-2 text-amber-800">{message.message}</span>
                 <span className="ml-2 text-xs text-amber-600">

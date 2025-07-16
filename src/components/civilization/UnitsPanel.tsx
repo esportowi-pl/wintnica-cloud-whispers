@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Users, Shield, Swords, Bow, Hammer } from 'lucide-react';
+import { Users, Shield, Swords, Target, Hammer } from 'lucide-react';
 
 interface Unit {
   id: string;
@@ -24,7 +24,7 @@ const UnitsPanel = ({ civilizationId }: UnitsPanelProps) => {
   const unitTypes = {
     worker: { name: 'Pracownik', icon: Hammer, cost: { gold: 10, food: 5 } },
     warrior: { name: 'Wojownik', icon: Swords, cost: { gold: 25, iron: 10 } },
-    archer: { name: 'Łucznik', icon: Bow, cost: { gold: 20, wood: 15 } },
+    archer: { name: 'Łucznik', icon: Target, cost: { gold: 20, wood: 15 } },
     guardian: { name: 'Strażnik', icon: Shield, cost: { gold: 30, iron: 15 } },
   };
 
